@@ -39,7 +39,6 @@
             color: var(--text); 
             margin: 0; padding: 0; padding-bottom: 80px; 
             transition: 0.3s; 
-            /* SİLİK ASTRONOT VE KİTAP ARKA PLANI */
             background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='220' height='220' viewBox='0 0 220 220'%3E%3Ctext x='20' y='60' font-size='40' transform='rotate(-15 20 60)' opacity='0.05'%3E🧑‍🚀📖%3C/text%3E%3Ctext x='130' y='160' font-size='35' transform='rotate(15 130 160)' opacity='0.03'%3E🚀📚%3C/text%3E%3C/svg%3E");
             background-attachment: fixed;
         }
@@ -86,13 +85,25 @@
         .badge-box { background: var(--input-bg); border: 1px solid var(--card-border); padding: 8px 12px; border-radius: 15px; display: inline-flex; align-items: center; gap: 6px; font-size: 12px; font-weight: 800; margin: 5px 5px 5px 0;}
         .badge-box.locked { opacity: 0.4; filter: grayscale(100%); }
         
+        /* GÜNÜN SÖZÜ KUTUSU */
+        .quote-box {
+            background: linear-gradient(135deg, rgba(108, 99, 255, 0.1), rgba(255, 101, 132, 0.1));
+            border: 1px solid var(--primary);
+            border-radius: 15px;
+            padding: 15px;
+            margin-bottom: 20px;
+            text-align: center;
+            position: relative;
+        }
+        .quote-box .icon { font-size: 24px; display: block; margin-bottom: 5px; animation: pulse 2s infinite; }
+        @keyframes pulse { 0% { transform: scale(1); } 50% { transform: scale(1.1); } 100% { transform: scale(1); } }
+
         .bookcase-wrapper { margin-top: 25px; margin-bottom: 30px; filter: drop-shadow(0 15px 25px rgba(0,0,0,0.2)); }
         .bookcase-top { background: linear-gradient(to bottom, var(--wood-medium), var(--wood-dark)); height: 35px; border-radius: 15px 15px 0 0; border: 3px solid var(--wood-dark); border-bottom: none; box-shadow: inset 0 5px 10px rgba(255,255,255,0.15); position: relative; }
         .bookcase-top::after { content: "📚 Uzay Arşivi"; position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); color: #fff; font-size: 14px; font-weight: 800; letter-spacing: 1px; text-shadow: 0 2px 4px rgba(0,0,0,0.6); background: rgba(0,0,0,0.2); padding: 3px 15px; border-radius: 10px; }
         .bookcase { background-color: var(--cabinet-bg); border: 15px solid var(--wood-dark); border-top: none; border-radius: 0 0 15px 15px; padding: 20px; display: grid; grid-template-columns: 1fr; gap: 25px; box-shadow: inset 0 15px 25px rgba(0,0,0,0.4); }
         @media(min-width: 600px) { .bookcase { grid-template-columns: 1fr 1fr; } }
         
-        /* Uzun yazılarda taşmayı engelleyen özellikler eklidir */
         .book-card { 
             background: var(--card-bg); 
             padding: 20px; 
@@ -160,6 +171,12 @@
         
         <div id="tab-home" class="tab-content active">
             
+            <!-- 5. MADDE: GÜNÜN SÖZÜ -->
+            <div class="quote-box">
+                <span class="icon">✨</span>
+                <p id="gununSozu" style="margin:0; font-size:14px; font-weight:600; font-style:italic;">"Kitaplar başka diyarlara açılan kapılardır."</p>
+            </div>
+
             <div id="studentHomePanel" style="display:none;">
                 <div class="panel" style="border-color: #2ecc71;">
                     <h3 style="color:#2ecc71;">🎯 Benim Rotam</h3>
@@ -359,6 +376,31 @@
 </div>
 
 <script>
+    // --- ÖZLÜ SÖZLER LİSTESİ ---
+    const ozluSozler = [
+        "Bir kitap kapağını araladığında, aslında yepyeni bir galaksiye ayak basarsın.",
+        "Kitapsız yaşamak, kör sağır ve dilsiz yaşamaktır. - Seneca",
+        "Kitaplar, başka bir zamanda yaşama biletinizdir.",
+        "Okuduğun her kitap, zihninde yanan yeni bir yıldızdır.",
+        "İyi kitaplar okumayan birinin, okuma yazma bilmeyen birine karşı hiçbir üstünlüğü yoktur. - Mark Twain",
+        "Kitaplar, zekanın çocuklarıdır. - Jonathan Swift",
+        "Bir insanın değeri, okuduğu kitapların değeri ile ölçülür. - Herbert Spencer",
+        "Okumak, bir insanın kendi zihniyle yaptığı uzay yolculuğudur.",
+        "Bugün okuyan biri, yarın dünyayı yöneten biri olabilir.",
+        "Kitap okumak, dünyayı farklı gözlerle görmenin en ucuz yoludur.",
+        "Kitaplar, sessiz ve en sadık dostlardır. En ulaşılabilir ve en bilge danışmanlardır. - Charles W. Eliot",
+        "Okumak gıdadır, okuyan insanlık bilen insanlıktır. - Victor Hugo",
+        "Eğer okumak için bir neden arıyorsan, sadece gökyüzüne bak. Orada keşfedilmeyi bekleyen ne çok şey var!",
+        "Kitaplar aklın çocuklarıdır. - Jonathan Swift",
+        "Okumak, geçmişin zekasıyla geleceği inşa etmektir."
+    ];
+
+    function gununSozunuBelirle() {
+        const bugun = new Date().getDate(); // Ayın gününe göre sabit bir söz seç (her gün değişir)
+        const sozIndex = bugun % ozluSozler.length;
+        document.getElementById('gununSozu').innerText = `"${ozluSozler[sozIndex]}"`;
+    }
+
     function playMagicSound() {
         try {
             const ctx = new (window.AudioContext || window.webkitAudioContext)();
@@ -388,6 +430,7 @@
     document.getElementById('themeToggle').innerText = savedTheme === 'light' ? '🌙' : '☀️';
     
     window.addEventListener('DOMContentLoaded', () => {
+        gununSozunuBelirle(); // Sayfa yüklenince sözü getir
         document.getElementById('themeSelect').value = savedTheme;
         document.getElementById('fontSelect').value = savedFont;
         document.getElementById('sizeSelect').value = savedSize;
@@ -679,9 +722,7 @@
                     studentStats[`${b.isim} ${b.soyisim} (${b.sinif})`] = (studentStats[`${b.isim} ${b.soyisim} (${b.sinif})`] || 0) + b.sayfaSayisi;
                     const ay = new Date(b.bitis).getMonth() + 1;
                     
-                    // 1. Dönem: Eylül(9) ile Ocak(1) arası
                     if(ay >= 9 || ay <= 1) toplamDonem1 += b.sayfaSayisi;
-                    // 2. Dönem: Şubat(2) ile Haziran(6) arası
                     else if(ay >= 2 && ay <= 6) toplamDonem2 += b.sayfaSayisi;
 
                     if(!isTeacher && b.uid === currentUser.uid) {
@@ -707,7 +748,6 @@
                 `;
             }
 
-            // DÖNEM HEDEFLERİ (1. Dönem 1000, 2. Dönem 1250 Sayfa)
             document.getElementById('donem1Sayfa').innerText = toplamDonem1 + " / 1000 syf";
             document.getElementById('barDonem1').style.width = Math.min(100, Math.round((toplamDonem1 / 1000) * 100)) + "%";
             document.getElementById('donem2Sayfa').innerText = toplamDonem2 + " / 1250 syf";
