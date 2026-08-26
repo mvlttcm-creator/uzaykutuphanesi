@@ -118,9 +118,11 @@
     <h1 style="font-size: 28px;">🚀 Uzay Kütüphanesi</h1>
     <p style="color: var(--muted); font-size: 14px; margin-bottom: 25px;">Maceraya kaldığın yerden devam et!</p>
     
-    <div class="school-login-box">
-        <label style="font-size: 12px; color: var(--muted); font-weight:bold;">Okul No (Kaptan iseniz E-posta):</label>
-        <input type="text" id="ogrenciNo" placeholder="Örn: 145 veya mvlttcm@..." style="margin-bottom: 12px;">
+    <!-- ÖĞRENCİ GİRİŞİ -->
+    <div id="studentLoginBox" class="school-login-box">
+        <h3 style="margin-top: 0; margin-bottom: 15px; color: var(--secondary); font-size: 16px;">🧑‍🚀 Öğrenci Girişi</h3>
+        <label style="font-size: 12px; color: var(--muted); font-weight:bold;">Okul No:</label>
+        <input type="number" id="ogrenciNo" placeholder="Örn: 145" style="margin-bottom: 12px;">
         
         <label style="font-size: 12px; color: var(--muted); font-weight:bold;">Şifre:</label>
         <input type="password" id="ogrenciSifre" placeholder="Şifren (En az 6 karakter)">
@@ -133,7 +135,27 @@
             <button class="submit-btn" style="background: #e67e22;" onclick="ogrenciKayitOl()">Kayıt Ol</button>
             <button class="submit-btn" onclick="ogrenciGirisYap()">Giriş Yap</button>
         </div>
+
+        <button onclick="kutuDegistir('kaptan')" style="margin-top: 25px; background: transparent; border: 1px solid var(--primary); color: var(--text); padding: 10px; border-radius: 12px; font-weight: bold; cursor: pointer; width: 100%;">
+            👨‍🏫 Yönetici (Kaptan) Paneli
+        </button>
     </div>
+
+    <!-- KAPTAN (YÖNETİCİ) GİRİŞİ KUTUSU -->
+    <div id="kaptanLoginBox" style="display: none; background: rgba(108, 99, 255, 0.05); padding: 20px; border-radius: 15px; border: 1px solid var(--primary); text-align: left;">
+        <h3 style="margin-top: 0; margin-bottom: 10px; color: var(--primary); font-size: 16px;">👨‍🏫 Kaptan Paneli</h3>
+        <p style="font-size: 11px; color: var(--muted); margin-top: 0; margin-bottom: 15px;">İlk girişinizde belirleyeceğiniz 6 haneli şifre, sistemdeki kalıcı Kaptan şifreniz olacaktır.</p>
+        
+        <label style="font-size: 12px; color: var(--muted); font-weight:bold;">Yönetici Şifresi (En az 6 hane):</label>
+        <input type="password" id="kaptanSifre" placeholder="6 haneli şifreniz" style="margin-bottom: 15px;">
+        
+        <button class="submit-btn" style="background: var(--primary);" onclick="kaptanGirisYap()">Sisteme Gir</button>
+        
+        <button onclick="kutuDegistir('ogrenci')" style="margin-top: 15px; background: transparent; border: 1px solid var(--muted); color: var(--text); padding: 10px; border-radius: 12px; font-weight: bold; cursor: pointer; width: 100%;">
+            🔙 Öğrenci Girişine Dön
+        </button>
+    </div>
+
     <p id="hataMesaji" style="color: #e74c3c; margin-top: 15px; font-size: 13px; font-weight:bold;"></p>
 </div>
 
@@ -367,23 +389,35 @@
 
     const db = firebase.database();
     
-    const ogretmenEposta = "mvlttcm@gmail.com"; 
+    // YENİ GİZLİ KAPTAN MAİLİ (E-posta yazma derdine son!)
+    const ogretmenEposta = "kaptan@kutuphane.com"; 
     let currentUser = null;
     let isTeacher = false;
     let globalBooks = [];
     let currentClassFilter = 'Tümü';
+
+    // --- GİRİŞ KONTROLLERİ ---
+    function kutuDegistir(tip) {
+        document.getElementById('hataMesaji').innerText = "";
+        if(tip === 'kaptan') {
+            document.getElementById('studentLoginBox').style.display = 'none';
+            document.getElementById('kaptanLoginBox').style.display = 'block';
+        } else {
+            document.getElementById('kaptanLoginBox').style.display = 'none';
+            document.getElementById('studentLoginBox').style.display = 'block';
+        }
+    }
 
     function ogrenciKayitOl() {
         const no = document.getElementById('ogrenciNo').value.trim();
         const sifre = document.getElementById('ogrenciSifre').value.trim();
         if(!no || !sifre) return;
         
-        // Eğer içinde @ varsa doğrudan kullan, yoksa öğrenci mailine çevir
-        let email = no.includes('@') ? no : `ogr${no}@kutuphane.com`;
+        let email = `ogr${no}@kutuphane.com`;
         
         auth.createUserWithEmailAndPassword(email, sifre)
             .then(() => alert("Kayıt başarılı! Giriş yapabilirsiniz."))
-            .catch(() => document.getElementById('hataMesaji').innerText = "Bu numara/hesap kayıtlı olabilir.");
+            .catch(() => document.getElementById('hataMesaji').innerText = "Bu numara alınmış veya şifre çok kısa.");
     }
 
     function ogrenciGirisYap() {
@@ -391,9 +425,30 @@
         const sifre = document.getElementById('ogrenciSifre').value.trim();
         if(!no || !sifre) return;
         
-        let email = no.includes('@') ? no : `ogr${no}@kutuphane.com`;
+        let email = `ogr${no}@kutuphane.com`;
         
         auth.signInWithEmailAndPassword(email, sifre).catch(() => document.getElementById('hataMesaji').innerText = "Numara veya şifre yanlış.");
+    }
+
+    function kaptanGirisYap() {
+        const sifre = document.getElementById('kaptanSifre').value.trim();
+        if(sifre.length < 6) {
+            document.getElementById('hataMesaji').innerText = "Şifre en az 6 haneli olmalıdır!";
+            return;
+        }
+        
+        const email = ogretmenEposta;
+        auth.signInWithEmailAndPassword(email, sifre)
+            .catch((error) => {
+                if(error.code === 'auth/user-not-found') {
+                    // İlk defa giriyorsa şifresini kaydedelim
+                    auth.createUserWithEmailAndPassword(email, sifre)
+                        .then(() => alert("🚀 Kaptan şifreniz başarıyla oluşturuldu! Sisteme giriliyor..."))
+                        .catch(err => document.getElementById('hataMesaji').innerText = "Hata: " + err.message);
+                } else {
+                    document.getElementById('hataMesaji').innerText = "Kaptan şifresi yanlış!";
+                }
+            });
     }
 
     function cikisYap() { auth.signOut(); }
@@ -424,9 +479,11 @@
             currentUser = null;
             document.getElementById('loginScreen').style.display = 'block';
             document.getElementById('appLayout').style.display = 'none';
+            document.getElementById('hataMesaji').innerText = "";
         }
     });
 
+    // ... (Kalan Kısımlar: Kitap Ekleme, Yapay Zeka vb. birebir aynı şekilde devam ediyor) ...
     document.getElementById('bookForm').addEventListener('submit', function(e) {
         e.preventDefault();
         const notlar = document.getElementById('notlar').value;
