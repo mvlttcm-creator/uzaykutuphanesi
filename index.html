@@ -12,7 +12,7 @@
     <!-- Modern Font: Nunito -->
     <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;800&display=swap" rel="stylesheet">
     
-    <!-- Gerekli Kütüphaneler (Firebase, Konfeti, Excel) -->
+    <!-- Gerekli Kütüphaneler -->
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-auth.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
@@ -20,101 +20,57 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
 
     <style>
-        /* TEMA DEĞİŞKENLERİ */
         :root { 
-            --primary: #6C63FF; 
-            --secondary: #FF6584; 
-            --bg: #1A1A2E; 
-            --text: #FFFFFF; 
-            --card-bg: #16213E; 
-            --card-border: rgba(255, 255, 255, 0.1);
-            --input-bg: #0F3460;
-            --input-text: #FFFFFF;
-            --nav-bg: #0F3460;
-            --muted: #8a9bb4;
+            --primary: #6C63FF; --secondary: #FF6584; --bg: #1A1A2E; --text: #FFFFFF; 
+            --card-bg: #16213E; --card-border: rgba(255, 255, 255, 0.1);
+            --input-bg: #0F3460; --input-text: #FFFFFF; --nav-bg: #0F3460; --muted: #8a9bb4;
         }
-        
         [data-theme="light"] {
-            --primary: #5A52D5; 
-            --secondary: #E05470; 
-            --bg: #F0F2F5; 
-            --text: #2D3436; 
-            --card-bg: #FFFFFF; 
-            --card-border: rgba(0, 0, 0, 0.1);
-            --input-bg: #F8F9FA;
-            --input-text: #2D3436;
-            --nav-bg: #FFFFFF;
-            --muted: #636E72;
+            --primary: #5A52D5; --secondary: #E05470; --bg: #F0F2F5; --text: #2D3436; 
+            --card-bg: #FFFFFF; --card-border: rgba(0, 0, 0, 0.1);
+            --input-bg: #F8F9FA; --input-text: #2D3436; --nav-bg: #FFFFFF; --muted: #636E72;
         }
-
-        body { font-family: 'Nunito', sans-serif; background-color: var(--bg); color: var(--text); margin: 0; padding: 0; padding-bottom: 80px; transition: background-color 0.3s, color 0.3s; }
+        body { font-family: 'Nunito', sans-serif; background-color: var(--bg); color: var(--text); margin: 0; padding: 0; padding-bottom: 80px; transition: 0.3s; }
         h1, h2, h3 { color: var(--secondary); text-align: center; margin-top: 0;}
-        
-        /* Üst Karşılama Barı */
-        .app-header { background: var(--card-bg); padding: 15px 20px; display: flex; justify-content: space-between; align-items: center; box-shadow: 0 4px 15px rgba(0,0,0,0.1); border-bottom: 1px solid var(--card-border); position: sticky; top: 0; z-index: 100;}
+        .app-header { background: var(--card-bg); padding: 15px 20px; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--card-border); position: sticky; top: 0; z-index: 100;}
         .greeting-text { font-size: 18px; font-weight: 800; color: var(--primary); margin: 0;}
-        .theme-btn { background: none; border: none; font-size: 24px; cursor: pointer; color: var(--text); padding: 0;}
-
+        .theme-btn { background: none; border: none; font-size: 24px; cursor: pointer; color: var(--text); }
         .container { max-width: 800px; margin: 20px auto; padding: 0 15px; }
-        
-        /* Menü Sekmeleri (Tab Sistemi) */
         .tab-content { display: none; animation: fadeIn 0.4s; }
         .tab-content.active { display: block; }
         @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
-
-        .panel { background: var(--card-bg); padding: 20px; border-radius: 20px; box-shadow: 0 8px 30px rgba(0,0,0,0.1); border: 1px solid var(--card-border); margin-bottom: 20px; transition: 0.3s;}
-        
-        /* Alt Navigasyon (App Menüsü) */
-        .bottom-nav { position: fixed; bottom: 0; left: 0; right: 0; background: var(--nav-bg); display: flex; justify-content: space-around; padding: 10px 0; padding-bottom: calc(10px + env(safe-area-inset-bottom)); box-shadow: 0 -5px 20px rgba(0,0,0,0.1); border-top: 1px solid var(--card-border); z-index: 100;}
-        .nav-btn { background: none; border: none; color: var(--muted); font-family: 'Nunito', sans-serif; font-size: 12px; font-weight: 800; display: flex; flex-direction: column; align-items: center; gap: 5px; cursor: pointer; transition: 0.3s; flex: 1;}
+        .panel { background: var(--card-bg); padding: 20px; border-radius: 20px; border: 1px solid var(--card-border); margin-bottom: 20px; }
+        .bottom-nav { position: fixed; bottom: 0; left: 0; right: 0; background: var(--nav-bg); display: flex; justify-content: space-around; padding: 10px 0; border-top: 1px solid var(--card-border); z-index: 100;}
+        .nav-btn { background: none; border: none; color: var(--muted); font-family: inherit; font-size: 12px; font-weight: 800; display: flex; flex-direction: column; align-items: center; gap: 5px; cursor: pointer; flex: 1;}
         .nav-btn span { font-size: 22px; }
         .nav-btn.active { color: var(--primary); transform: translateY(-3px);}
-
-        /* Giriş Ekranı */
-        #loginScreen { max-width: 420px; margin: 60px auto; text-align: center; background: var(--card-bg); padding: 35px 25px; border-radius: 20px; box-shadow: 0 10px 30px rgba(0,0,0,0.15); border: 1px solid var(--card-border);}
-        .google-btn { background-color: #4285F4; color: white; border: none; padding: 12px 20px; font-size: 15px; border-radius: 12px; cursor: pointer; display: flex; align-items: center; justify-content: center; width: 100%; gap: 10px; font-weight: bold; transition: 0.3s; margin-bottom: 15px;}
+        #loginScreen { max-width: 420px; margin: 60px auto; text-align: center; background: var(--card-bg); padding: 35px 25px; border-radius: 20px; border: 1px solid var(--card-border);}
+        .google-btn { background-color: #4285F4; color: white; border: none; padding: 12px 20px; font-size: 15px; border-radius: 12px; cursor: pointer; display: flex; align-items: center; justify-content: center; width: 100%; gap: 10px; font-weight: bold; margin-bottom: 15px;}
         .school-login-box { background: rgba(0,0,0,0.05); padding: 20px; border-radius: 15px; border: 1px solid var(--card-border); text-align: left; }
-        
-        /* Ortak Elemanlar */
-        input, select, textarea { width: 100%; padding: 12px; border: 1px solid var(--card-border); border-radius: 12px; box-sizing: border-box; font-family: inherit; font-size: 14px; background: var(--input-bg); color: var(--input-text); outline: none; transition: 0.3s; }
-        input:focus, select:focus, textarea:focus { border-color: var(--primary); }
-        .submit-btn { background-color: var(--primary); color: white; border: none; padding: 14px; border-radius: 12px; font-weight: 800; font-size: 15px; cursor: pointer; transition: 0.3s; width: 100%; }
-        .submit-btn:hover { background-color: #5750d1; }
+        input, select, textarea { width: 100%; padding: 12px; border: 1px solid var(--card-border); border-radius: 12px; box-sizing: border-box; font-family: inherit; font-size: 14px; background: var(--input-bg); color: var(--input-text); outline: none; }
+        .submit-btn { background-color: var(--primary); color: white; border: none; padding: 14px; border-radius: 12px; font-weight: 800; font-size: 15px; cursor: pointer; width: 100%; }
         .logout-btn { background-color: #e74c3c; width: 100%; margin-top: 30px; }
-
-        /* Yıldız Değerlendirme Sistemi */
         .rating { display: flex; flex-direction: row-reverse; justify-content: flex-end; gap: 5px;}
         .rating input { display: none; }
-        .rating label { font-size: 30px; color: var(--card-border); cursor: pointer; transition: 0.2s;}
+        .rating label { font-size: 30px; color: var(--card-border); cursor: pointer;}
         .rating input:checked ~ label, .rating label:hover, .rating label:hover ~ label { color: #f1c40f; }
-
-        /* Kartlar ve İlerlemeler */
         .progress-box { background: var(--input-bg); padding: 15px; border-radius: 15px; margin-bottom: 15px; border: 1px solid var(--card-border); }
         .progress-title { font-size: 13px; color: var(--muted); font-weight: bold; display: flex; justify-content: space-between; margin-bottom: 8px; }
         .progress-bar-bg { width: 100%; background: rgba(0,0,0,0.1); height: 12px; border-radius: 6px; overflow: hidden; }
-        .progress-bar-fill { height: 100%; background: linear-gradient(90deg, var(--primary), var(--secondary)); width: 0%; transition: width 0.5s ease; border-radius: 6px; }
-        .progress-stats { font-size: 11px; color: var(--text); margin-top: 5px; text-align: right; opacity: 0.8;}
-
+        .progress-bar-fill { height: 100%; background: linear-gradient(90deg, var(--primary), var(--secondary)); width: 0%; border-radius: 6px; }
         .meb-calendar-item { background: var(--input-bg); padding: 10px 12px; border-radius: 10px; margin-bottom: 8px; display: flex; justify-content: space-between; align-items: center; border-left: 4px solid #2ecc71; font-size: 13px; font-weight: 600;}
-        
         .book-card { background: var(--card-bg); padding: 20px; border-radius: 15px; border: 1px solid var(--card-border); border-left: 6px solid var(--secondary); margin-bottom: 15px; position: relative;}
         .book-card.approved { border-left-color: #2ecc71; }
         .rank-badge { position: absolute; top: 15px; right: 15px; font-size: 11px; background: rgba(255, 255, 255, 0.1); padding: 4px 8px; border-radius: 8px; color: var(--muted); font-weight: bold;}
-        
-        /* Liderlik Tablosu & Galaksi Lideri */
         .leaderboard-list { list-style: none; padding: 0; margin: 0; }
         .leaderboard-list li { background: var(--input-bg); margin-bottom: 10px; padding: 12px; border-radius: 10px; font-size: 14px; font-weight: 600; display: flex; justify-content: space-between; align-items: center; border-left: 4px solid var(--primary); }
-        .leader-1 { background: linear-gradient(45deg, #f1c40f, #e67e22) !important; color: #fff !important; transform: scale(1.02); border: none !important; box-shadow: 0 5px 15px rgba(241, 196, 15, 0.4);}
-        .leader-1 span { color: #fff !important; font-weight: 900;}
-
-        /* Öğretmen Filtre Butonları */
+        .leader-1 { background: linear-gradient(45deg, #f1c40f, #e67e22) !important; color: #fff !important; transform: scale(1.02); box-shadow: 0 5px 15px rgba(241, 196, 15, 0.4);}
         .filter-btn { background: var(--input-bg); color: var(--text); border: 1px solid var(--card-border); padding: 8px 12px; border-radius: 8px; cursor: pointer; font-size: 12px; font-weight: bold;}
         .filter-btn.active { background: var(--primary); border-color: var(--primary); color: white;}
     </style>
 </head>
 <body>
 
-<!-- GİRİŞ EKRANI -->
 <div id="loginScreen">
     <h1 style="font-size: 28px;">🚀 Uzay Kütüphanesi</h1>
     <p style="color: var(--muted); font-size: 14px; margin-bottom: 25px;">Maceraya kaldığın yerden devam et!</p>
@@ -130,7 +86,6 @@
         
         <label style="font-size: 12px; color: var(--muted); font-weight:bold;">Şifre:</label>
         <input type="password" id="ogrenciSifre" placeholder="Şifren (En az 6 karakter)">
-        <!-- Şifre İpucu / Hatırlatıcı -->
         <div style="font-size: 11px; color: var(--secondary); margin-top: -6px; margin-bottom: 12px; font-weight: bold;">
             💡 İpucu: Okul numaran ve adını birleştirebilirsin (Örn: 145ali)
         </div>
@@ -143,30 +98,23 @@
     <p id="hataMesaji" style="color: #e74c3c; margin-top: 15px; font-size: 13px; font-weight:bold;"></p>
 </div>
 
-<!-- UYGULAMA İÇİ EKRAN (Giriş yapınca görünür) -->
 <div id="appLayout" style="display: none;">
-    
-    <!-- Üst Karşılama Barı -->
     <div class="app-header">
         <h2 id="greetingText" class="greeting-text">Merhaba Gezgin ✨</h2>
         <button id="themeToggle" class="theme-btn" onclick="toggleTheme()">☀️</button>
     </div>
 
     <div class="container">
-        
-        <!-- SEKME 1: ANA SAYFA -->
         <div id="tab-home" class="tab-content active">
             <div class="panel">
                 <h3>📊 Rota İstatistikleri</h3>
                 <div class="progress-box">
                     <div class="progress-title"><span>1. Dönem Yolculuğu</span><span id="donem1Sayfa">0 syf</span></div>
                     <div class="progress-bar-bg"><div class="progress-bar-fill" id="barDonem1"></div></div>
-                    <div class="progress-stats" id="detayDonem1">Ay: 0 | Hafta: 0 | Gün: 0</div>
                 </div>
                 <div class="progress-box">
                     <div class="progress-title"><span>2. Dönem Yolculuğu</span><span id="donem2Sayfa">0 syf</span></div>
                     <div class="progress-bar-bg"><div class="progress-bar-fill" id="barDonem2"></div></div>
-                    <div class="progress-stats" id="detayDonem2">Ay: 0 | Hafta: 0 | Gün: 0</div>
                 </div>
             </div>
 
@@ -182,10 +130,7 @@
             <button onclick="cikisYap()" class="submit-btn logout-btn">🚪 Gemiden Çıkış Yap</button>
         </div>
 
-        <!-- SEKME 2: KÜTÜPHANE -->
         <div id="tab-books" class="tab-content">
-            
-            <!-- Öğrenci İçin Kitap Ekleme Formu -->
             <div class="panel" id="studentFormPanel" style="border: 2px solid var(--primary);">
                 <h3>🚀 Yeni Keşif Ekle</h3>
                 <form id="bookForm" style="display: grid; gap: 12px;">
@@ -205,8 +150,7 @@
                     <input type="text" id="kitapAdi" placeholder="Okuduğun Kitabın Adı" required>
                     <input type="number" id="sayfaSayisi" placeholder="Sayfa Sayısı" required>
                     
-                    <!-- 5 Yıldız Değerlendirme -->
-                    <div style="margin-top: 5px;">
+                    <div>
                         <small style="color:var(--muted); font-weight:bold;">Kitaba Puanın:</small>
                         <div class="rating">
                             <input type="radio" id="star5" name="rating" value="5"><label for="star5">★</label>
@@ -226,7 +170,6 @@
                 </form>
             </div>
             
-            <!-- Öğretmen Paneli: Filtreler ve Excel İndirme -->
             <div id="teacherPanel" style="display: none; margin-bottom: 20px;">
                 <div class="panel" style="background: rgba(46, 204, 113, 0.1); border-color: #2ecc71;">
                     <h3 style="color:#2ecc71; margin-top:0;">👨‍🏫 Kaptan Paneli</h3>
@@ -244,44 +187,29 @@
             <div id="cardsContainer"></div>
         </div>
 
-        <!-- SEKME 3: LİDERLİK VE AJANDA -->
         <div id="tab-leaderboard" class="tab-content">
             <div class="panel">
                 <h3>🏆 Galaksi Liderleri</h3>
-                <p style="text-align:center; color:var(--muted); font-size:12px; margin-top:-10px;">(Onaylanmış toplam sayfalar)</p>
                 <ul id="leaderboard" class="leaderboard-list"></ul>
             </div>
-
             <div class="panel">
                 <h3>📌 Okuma Ajandam</h3>
                 <input type="date" id="agendaDate" onchange="ajandaGoster()" style="margin-bottom:10px;">
                 <input type="text" id="agendaText" placeholder="Örn: 50 sayfa okunacak" style="margin-bottom:10px;">
                 <button class="submit-btn" style="padding:10px;" onclick="ajandaEkle()">Notu Kaydet</button>
-                <ul id="agendaList" style="list-style:none; padding:0; margin-top:20px; font-size:14px; color:var(--text);"></ul>
+                <ul id="agendaList" style="list-style:none; padding:0; margin-top:20px; font-size:14px;"></ul>
             </div>
         </div>
-
     </div>
 
-    <!-- ALT NAVİGASYON BARI -->
     <div class="bottom-nav">
-        <button class="nav-btn active" onclick="switchTab('tab-home', this)">
-            <span>🏠</span>
-            Ana Ekran
-        </button>
-        <button class="nav-btn" onclick="switchTab('tab-books', this)">
-            <span>📚</span>
-            Kütüphane
-        </button>
-        <button class="nav-btn" onclick="switchTab('tab-leaderboard', this)">
-            <span>🏆</span>
-            Liderlik
-        </button>
+        <button class="nav-btn active" onclick="switchTab('tab-home', this)"><span>🏠</span>Ana Ekran</button>
+        <button class="nav-btn" onclick="switchTab('tab-books', this)"><span>📚</span>Kütüphane</button>
+        <button class="nav-btn" onclick="switchTab('tab-leaderboard', this)"><span>🏆</span>Liderlik</button>
     </div>
 </div>
 
 <script>
-    // --- TEMA VE KARŞILAMA AYARLARI ---
     const savedTheme = localStorage.getItem('theme') || 'dark';
     document.documentElement.setAttribute('data-theme', savedTheme);
     document.getElementById('themeToggle').innerText = savedTheme === 'light' ? '🌙' : '☀️';
@@ -304,25 +232,14 @@
 
     function akilliKarsilamaGuncelle() {
         const hour = new Date().getHours();
-        let msg = "Merhaba";
-        if (hour >= 5 && hour < 12) msg = "Günaydın";
-        else if (hour >= 12 && hour < 18) msg = "İyi günler";
-        else if (hour >= 18 && hour < 23) msg = "İyi akşamlar";
-        else msg = "İyi geceler";
-
+        let msg = hour >= 5 && hour < 12 ? "Günaydın" : hour >= 12 && hour < 18 ? "İyi günler" : hour >= 18 && hour < 23 ? "İyi akşamlar" : "İyi geceler";
         let isim = localStorage.getItem('kutuphane_isim');
-        if(currentUser && currentUser.email === ogretmenEposta) {
-            isim = "Kaptan";
-        } else if (!isim) {
-            isim = "Gezgin";
-        } else {
-            isim = isim.split(' ')[0];
-        }
-        
+        if(currentUser && currentUser.email === ogretmenEposta) isim = "Kaptan";
+        else if(!isim) isim = "Gezgin";
+        else isim = isim.split(' ')[0];
         document.getElementById('greetingText').innerText = `${msg}, ${isim}! ✨`;
     }
 
-    // --- UZAY RÜTBELERİ ---
     function getRutbe(sayfa) {
         if(sayfa >= 1500) return "🌌 Galaksi Fatihi";
         if(sayfa >= 801) return "☄️ Meteor Avcısı";
@@ -330,18 +247,11 @@
         return "🧑‍🚀 Çaylak Astronot";
     }
 
-    // --- SERVICE WORKER ---
-    if ('serviceWorker' in navigator) {
-        window.addEventListener('load', () => { navigator.serviceWorker.register('./sw.js').catch(()=>{}); });
-    }
-
     function formatText(input) {
         let words = input.value.split(' ');
-        let formatted = words.map(word => word.length > 0 ? word.charAt(0).toLocaleUpperCase('tr-TR') + word.slice(1).toLocaleLowerCase('tr-TR') : '');
-        input.value = formatted.join(' ');
+        input.value = words.map(w => w.length > 0 ? w.charAt(0).toLocaleUpperCase('tr-TR') + w.slice(1).toLocaleLowerCase('tr-TR') : '').join(' ');
     }
 
-    // --- FİREBASE AYARLARI ---
     const firebaseConfig = {
         apiKey: "AIzaSyAOncvYBGQVQ7M7SN1vHgNNCDyGQK26ph4",
         authDomain: "kitap-kurdu-bc094.firebaseapp.com",
@@ -354,11 +264,7 @@
 
     firebase.initializeApp(firebaseConfig);
     const auth = firebase.auth();
-    
-    // OTORİTE KİLİDİ: Oturumu cihazda kalıcı olarak mühürle
-    auth.setPersistence(firebase.auth.Auth.Persistence.LOCAL)
-        .catch((error) => console.log("Hafıza Hatası:", error));
-
+    auth.setPersistence(firebase.auth.Auth.Persistence.LOCAL).catch(()=>{});
     const db = firebase.database();
     
     const ogretmenEposta = "mvlttcm@gmail.com"; 
@@ -383,17 +289,16 @@
         auth.signInWithEmailAndPassword(`ogr${no}@kutuphane.com`, sifre).catch(() => document.getElementById('hataMesaji').innerText = "Numara veya şifre yanlış.");
     }
 
-    // KESİN ÇÖZÜM: Popup yerine doğrudan yönlendirme (Redirect) kullanılıyor
+    // GÜVENLİ GOOGLE GİRİŞİ (GitHub Pages uyumlu Redirect metodu)
     function googleIleGiris() {
         const provider = new firebase.auth.GoogleAuthProvider();
-        auth.signInWithRedirect(provider).catch(error => { 
-            document.getElementById('hataMesaji').innerText = "Google Giriş Hatası: " + error.message; 
+        auth.signInWithRedirect(provider).catch(error => {
+            document.getElementById('hataMesaji').innerText = "Giriş Hatası: " + error.message;
         });
     }
 
-    // Yönlendirme dönüş sonucunu yakala
-    auth.getRedirectResult().catch(function(error) { 
-        if(error) document.getElementById('hataMesaji').innerText = "Google Onay Hatası: " + error.message; 
+    auth.getRedirectResult().catch(error => {
+        if(error) document.getElementById('hataMesaji').innerText = "Onay Hatası: " + error.message;
     });
 
     function cikisYap() { auth.signOut(); }
@@ -402,7 +307,6 @@
         if (user) {
             currentUser = user;
             isTeacher = (user.email === ogretmenEposta);
-            
             document.getElementById('loginScreen').style.display = 'none';
             document.getElementById('appLayout').style.display = 'block';
             
@@ -415,7 +319,6 @@
                 if(localStorage.getItem('kutuphane_sinif')) document.getElementById('sinif').value = localStorage.getItem('kutuphane_sinif');
                 if(localStorage.getItem('kutuphane_no')) document.getElementById('okulNo').value = localStorage.getItem('kutuphane_no');
             }
-
             akilliKarsilamaGuncelle(); 
             document.getElementById('agendaDate').valueAsDate = new Date();
             ajandaGoster();
@@ -448,8 +351,7 @@
         }
 
         db.ref('kitaplar').push({
-            uid: currentUser.uid, 
-            isim: isim,
+            uid: currentUser.uid, isim: isim,
             soyisim: document.getElementById('soyisim').value,
             sinif: document.getElementById('sinif').value,
             okulNo: document.getElementById('okulNo').value,
@@ -458,21 +360,13 @@
             yildiz: seciliYildiz,
             baslama: document.getElementById('baslama').value,
             bitis: document.getElementById('bitis').value,
-            notlar: notlar,
-            onay: false,
+            notlar: notlar, onay: false,
             timestamp: firebase.database.ServerValue.TIMESTAMP
         }).then(() => {
             document.getElementById('kitapAdi').value = '';
             document.getElementById('sayfaSayisi').value = '';
             document.getElementById('notlar').value = '';
-            
-            confetti({
-                particleCount: 150,
-                spread: 80,
-                origin: { y: 0.6 },
-                colors: ['#6C63FF', '#FF6584', '#2ecc71', '#f1c40f']
-            });
-            
+            confetti({ particleCount: 150, spread: 80, origin: { y: 0.6 } });
             setTimeout(() => alert("Harika! Keşif kartın rafa eklendi. Onay bekleniyor. 🚀"), 500);
         });
     });
@@ -481,112 +375,77 @@
         db.ref('kitaplar').on('value', (snapshot) => {
             const data = snapshot.val();
             globalBooks = data ? Object.keys(data).map(key => ({ id: key, ...data[key] })) : [];
-            
-            let studentStats = {}, toplamSayfaDonem1 = 0, toplamSayfaDonem2 = 0;
+            let studentStats = {}, toplamDonem1 = 0, toplamDonem2 = 0;
 
             globalBooks.forEach(b => {
                 if(b.onay) {
                     studentStats[`${b.isim} ${b.soyisim} (${b.sinif})`] = (studentStats[`${b.isim} ${b.soyisim} (${b.sinif})`] || 0) + b.sayfaSayisi;
                     const ay = new Date(b.bitis).getMonth() + 1;
-                    if(ay >= 9 || ay <= 1) toplamSayfaDonem1 += b.sayfaSayisi;
-                    else if(ay >= 2 && ay <= 6) toplamSayfaDonem2 += b.sayfaSayisi;
+                    if(ay >= 9 || ay <= 1) toplamDonem1 += b.sayfaSayisi;
+                    else if(ay >= 2 && ay <= 6) toplamDonem2 += b.sayfaSayisi;
                 }
             });
 
-            document.getElementById('donem1Sayfa').innerText = toplamSayfaDonem1 + " syf";
-            document.getElementById('barDonem1').style.width = Math.min(100, Math.round((toplamSayfaDonem1 / 2000) * 100)) + "%";
-            document.getElementById('donem2Sayfa').innerText = toplamSayfaDonem2 + " syf";
-            document.getElementById('barDonem2').style.width = Math.min(100, Math.round((toplamSayfaDonem2 / 2000) * 100)) + "%";
+            document.getElementById('donem1Sayfa').innerText = toplamDonem1 + " syf";
+            document.getElementById('barDonem1').style.width = Math.min(100, Math.round((toplamDonem1 / 2000) * 100)) + "%";
+            document.getElementById('donem2Sayfa').innerText = toplamDonem2 + " syf";
+            document.getElementById('barDonem2').style.width = Math.min(100, Math.round((toplamDonem2 / 2000) * 100)) + "%";
 
             const leaderboard = document.getElementById('leaderboard');
             leaderboard.innerHTML = '';
-            const sortedLeaders = Object.entries(studentStats).sort((a,b) => b[1] - a[1]).slice(0, 10);
-            
-            sortedLeaders.forEach((l, i) => {
+            Object.entries(studentStats).sort((a,b) => b[1] - a[1]).slice(0, 10).forEach((l, i) => {
                 const rutbe = getRutbe(l[1]);
                 if(i === 0) {
-                    leaderboard.innerHTML += `
-                        <li class="leader-1">
-                            <div>
-                                <div style="font-size:12px; opacity:0.9;">👑 Haftanın Lideri</div>
-                                <div style="font-size:16px;">${l[0]} <span style="font-size:11px; font-weight:normal;">(${rutbe})</span></div>
-                            </div>
-                            <span>${l[1]} syf</span>
-                        </li>`;
+                    leaderboard.innerHTML += `<li class="leader-1"><div>👑 <b>${l.join(': ')} syf</b> <span style="font-size:11px;">(${rutbe})</span></div><span>Lider</span></li>`;
                 } else {
-                    const icon = i===1?'🥈':i===2?'🥉':'🎖️';
-                    leaderboard.innerHTML += `
-                        <li>
-                            <div>${icon} ${l[0]} <br><span style="font-size:10px; color:var(--muted);">${rutbe}</span></div>
-                            <span style="color:var(--primary);">${l[1]} syf</span>
-                        </li>`;
+                    leaderboard.innerHTML += `<li><div>${i+1}. ${l[0]} <span style="font-size:10px; color:var(--muted);">${rutbe}</span></div><span>${l[1]} syf</span></li>`;
                 }
             });
-
             kartlariCiz();
         });
     }
 
-    window.setFilter = function(sinif, btnElement) {
+    window.setFilter = function(sinif, btn) {
         currentClassFilter = sinif;
-        document.querySelectorAll('.filter-btn').forEach(btn => btn.classList.remove('active'));
-        btnElement.classList.add('active');
+        document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
         kartlariCiz();
     }
 
     function kartlariCiz() {
-        const cardsContainer = document.getElementById('cardsContainer');
-        cardsContainer.innerHTML = '';
-        
-        let displayBooks = isTeacher ? globalBooks : globalBooks.filter(b => b.uid === currentUser.uid);
-        if(isTeacher && currentClassFilter !== 'Tümü') {
-            displayBooks = displayBooks.filter(b => b.sinif === currentClassFilter);
-        }
+        const container = document.getElementById('cardsContainer');
+        container.innerHTML = '';
+        let list = isTeacher ? globalBooks : globalBooks.filter(b => b.uid === currentUser.uid);
+        if(isTeacher && currentClassFilter !== 'Tümü') list = list.filter(b => b.sinif === currentClassFilter);
 
-        displayBooks.reverse().forEach(book => {
-            const yildizSayisi = book.yildiz || 5; 
-            const yildizHtml = "⭐".repeat(yildizSayisi) + "<span style='color:var(--card-border)'>★</span>".repeat(5-yildizSayisi);
-
-            cardsContainer.innerHTML += `
+        list.reverse().forEach(book => {
+            const stars = "⭐".repeat(book.yildiz || 5);
+            container.innerHTML += `
                 <div class="book-card ${book.onay ? 'approved' : ''}">
                     <div style="background:var(--primary); color:white; padding:4px 8px; border-radius:5px; font-size:12px; display:inline-block; font-weight:bold;">${book.sinif} - No: ${book.okulNo}</div>
                     ${!isTeacher ? `<div class="rank-badge">${getRutbe(book.sayfaSayisi)}</div>` : ''}
-                    
                     <h4 style="margin:10px 0 2px 0; color:var(--secondary);">${book.kitapAdi}</h4>
-                    <div style="font-size:12px; letter-spacing:2px; margin-bottom:8px;">${yildizHtml}</div>
-                    
+                    <div style="font-size:12px; margin-bottom:8px;">${stars}</div>
                     <p style="margin:5px 0; font-size:13px;">👨‍🚀 ${book.isim} ${book.soyisim} | 📑 ${book.sayfaSayisi} syf</p>
                     <p style="background:rgba(0,0,0,0.1); padding:10px; border-radius:8px; font-style:italic; font-size:13px;">"${book.notlar}"</p>
-                    
-                    <div style="margin-top:10px; font-weight:bold; font-size:12px; color: ${book.onay ? '#2ecc71' : '#f39c12'};">
-                        ${book.onay ? '✅ Kaptan Onayladı' : '⏳ Kaptan İnceliyor'}
-                    </div>
-                    
+                    <div style="margin-top:10px; font-weight:bold; font-size:12px; color: ${book.onay ? '#2ecc71' : '#f39c12'};">${book.onay ? '✅ Kaptan Onayladı' : '⏳ Kaptan İnceliyor'}</div>
                     ${isTeacher ? `
                         <div style="margin-top:15px; border-top:1px solid var(--card-border); padding-top:10px; display:flex; justify-content:space-between; align-items:center;">
-                            <label style="cursor:pointer; font-size:13px; font-weight:bold;"><input type="checkbox" ${book.onay ? 'checked' : ''} onchange="db.ref('kitaplar/${book.id}').update({onay: this.checked})" style="width:18px; height:18px; vertical-align:middle; margin-right:5px;"> Onayla</label>
-                            <button onclick="if(confirm('Silinsin mi?')) db.ref('kitaplar/${book.id}').remove()" style="background:#e74c3c; color:white; border:none; border-radius:5px; padding:6px 12px; cursor:pointer; font-weight:bold;">🗑️ Sil</button>
+                            <label style="cursor:pointer; font-size:13px;"><input type="checkbox" ${book.onay ? 'checked' : ''} onchange="db.ref('kitaplar/${book.id}').update({onay: this.checked})" style="width:18px; height:18px; vertical-align:middle; margin-right:5px;"> Onayla</label>
+                            <button onclick="if(confirm('Silinsin mi?')) db.ref('kitaplar/${book.id}').remove()" style="background:#e74c3c; color:white; border:none; border-radius:5px; padding:6px 12px; cursor:pointer;">🗑️ Sil</button>
                         </div>
                     ` : ''}
-                </div>
-            `;
+                </div>`;
         });
     }
 
     window.excelIndir = function() {
         if(globalBooks.length === 0) { alert("İndirilecek veri yok!"); return; }
-        
         const ws_data = globalBooks.map(b => ({
-            "Ad Soyad": b.isim + " " + b.soyisim,
-            "Sınıf": b.sinif,
-            "Okul No": b.okulNo,
-            "Kitap Adı": b.kitapAdi,
-            "Sayfa": b.sayfaSayisi,
-            "Değerlendirme Puanı": (b.yildiz || 5) + " Yıldız",
-            "Onay Durumu": b.onay ? "Onaylandı" : "Bekliyor",
-            "Öğrenci Notları": b.notlar
+            "Ad Soyad": b.isim + " " + b.soyisim, "Sınıf": b.sinif, "Okul No": b.okulNo,
+            "Kitap Adı": b.kitapAdi, "Sayfa": b.sayfaSayisi, "Puan": (b.yildiz || 5) + " Yıldız",
+            "Onay": b.onay ? "Onaylandı" : "Bekliyor", "Notlar": b.notlar
         }));
-
         const ws = XLSX.utils.json_to_sheet(ws_data);
         const wb = XLSX.utils.book_new();
         XLSX.utils.book_append_sheet(wb, ws, "Okuma_Verileri");
@@ -594,50 +453,30 @@
     }
 
     function ajandaEkle() {
-        const tarih = document.getElementById('agendaDate').value;
-        const not = document.getElementById('agendaText').value;
-        if(!tarih || !not) return;
-        let ajandalar = JSON.parse(localStorage.getItem('kutuphane_ajanda') || '{}');
-        (ajandalar[tarih] = ajandalar[tarih] || []).push(not);
-        localStorage.setItem('kutuphane_ajanda', JSON.stringify(ajandalar));
+        const t = document.getElementById('agendaDate').value, n = document.getElementById('agendaText').value;
+        if(!t || !n) return;
+        let a = JSON.parse(localStorage.getItem('kutuphane_ajanda') || '{}');
+        (a[t] = a[t] || []).push(n);
+        localStorage.setItem('kutuphane_ajanda', JSON.stringify(a));
         document.getElementById('agendaText').value = ''; ajandaGoster();
     }
 
     function ajandaGoster() {
-        const tarih = document.getElementById('agendaDate').value;
-        const liste = document.getElementById('agendaList');
-        liste.innerHTML = '';
-        let ajandalar = JSON.parse(localStorage.getItem('kutuphane_ajanda') || '{}');
-        let notlar = ajandalar[tarih] || [];
-        if(notlar.length === 0) {
-            liste.innerHTML = "<p style='color:var(--muted); font-size:13px; text-align:center;'>Bu tarihe ait not bulunmuyor.</p>"; return;
-        }
-        notlar.forEach((n, index) => {
-            liste.innerHTML += `
-                <li style="margin-bottom:10px; background:var(--input-bg); padding:10px; border-radius:8px; border:1px solid var(--card-border); display:flex; justify-content:space-between; align-items:center;">
-                    <span style="flex:1;">✨ ${n}</span>
-                    <div style="display:flex; gap:6px; margin-left:10px;">
-                        <button onclick="ajandaDuzenle('${tarih}', ${index})" style="background:#f39c12; color:white; border:none; padding:5px 8px; border-radius:5px; cursor:pointer;">✏️</button>
-                        <button onclick="ajandaSil('${tarih}', ${index})" style="background:#e74c3c; color:white; border:none; padding:5px 8px; border-radius:5px; cursor:pointer;">🗑️</button>
-                    </div>
-                </li>`;
+        const t = document.getElementById('agendaDate').value, l = document.getElementById('agendaList');
+        l.innerHTML = '';
+        let notlar = (JSON.parse(localStorage.getItem('kutuphane_ajanda') || '{}'))[t] || [];
+        if(notlar.length === 0) { l.innerHTML = "<p style='color:var(--muted); font-size:13px; text-align:center;'>Bu tarihe ait not bulunmuyor.</p>"; return; }
+        notlar.forEach((n, i) => {
+            l.innerHTML += `<li style="margin-bottom:8px; background:var(--input-bg); padding:8px; border-radius:8px; display:flex; justify-content:space-between; align-items:center;"><span>✨ ${n}</span><button onclick="ajandaSil('${t}', ${i})" style="background:#e74c3c; color:white; border:none; padding:4px 8px; border-radius:4px; cursor:pointer;">🗑️</button></li>`;
         });
     }
 
-    function ajandaDuzenle(tarih, i) {
-        let ajandalar = JSON.parse(localStorage.getItem('kutuphane_ajanda') || '{}');
-        let yeni = prompt("Düzenle:", ajandalar[tarih][i]);
-        if(yeni && yeni.trim() !== "") { ajandalar[tarih][i] = yeni.trim(); localStorage.setItem('kutuphane_ajanda', JSON.stringify(ajandalar)); ajandaGoster(); }
-    }
-
-    function ajandaSil(tarih, i) {
-        if(confirm("Silinsin mi?")) {
-            let ajandalar = JSON.parse(localStorage.getItem('kutuphane_ajanda') || '{}');
-            ajandalar[tarih].splice(i, 1);
-            if(ajandalar[tarih].length === 0) delete ajandalar[tarih];
-            localStorage.setItem('kutuphane_ajanda', JSON.stringify(ajandalar));
-            ajandaGoster();
-        }
+    function ajandaSil(t, i) {
+        let a = JSON.parse(localStorage.getItem('kutuphane_ajanda') || '{}');
+        a[t].splice(i, 1);
+        if(a[t].length === 0) delete a[t];
+        localStorage.setItem('kutuphane_ajanda', JSON.stringify(a));
+        ajandaGoster();
     }
 </script>
 </body>
