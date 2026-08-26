@@ -430,6 +430,7 @@
         auth.signInWithEmailAndPassword(email, sifre).catch(() => document.getElementById('hataMesaji').innerText = "Numara veya şifre yanlış.");
     }
 
+    // --- GÜNCELLENEN VE HATALARI YAKALAYAN KAPTAN GİRİŞ FONKSİYONU ---
     function kaptanGirisYap() {
         const sifre = document.getElementById('kaptanSifre').value.trim();
         if(sifre.length < 6) {
@@ -441,12 +442,15 @@
         auth.signInWithEmailAndPassword(email, sifre)
             .catch((error) => {
                 if(error.code === 'auth/user-not-found') {
-                    // İlk defa giriyorsa şifresini kaydedelim
+                    // Hesap yoksa kendi oluştursun
                     auth.createUserWithEmailAndPassword(email, sifre)
                         .then(() => alert("🚀 Kaptan şifreniz başarıyla oluşturuldu! Sisteme giriliyor..."))
-                        .catch(err => document.getElementById('hataMesaji').innerText = "Hata: " + err.message);
+                        .catch(err => document.getElementById('hataMesaji').innerText = "Kayıt Hatası: " + err.message);
+                } else if (error.code === 'auth/wrong-password') {
+                    document.getElementById('hataMesaji').innerText = "Şifre yanlış, tekrar deneyin.";
                 } else {
-                    document.getElementById('hataMesaji').innerText = "Kaptan şifresi yanlış!";
+                    // DİĞER TÜM HATALARI EKRANA YAZDIR (Spam, bağlantı vs.)
+                    document.getElementById('hataMesaji').innerText = "Sistem Hatası: " + error.message;
                 }
             });
     }
@@ -483,7 +487,6 @@
         }
     });
 
-    // ... (Kalan Kısımlar: Kitap Ekleme, Yapay Zeka vb. birebir aynı şekilde devam ediyor) ...
     document.getElementById('bookForm').addEventListener('submit', function(e) {
         e.preventDefault();
         const notlar = document.getElementById('notlar').value;
