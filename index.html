@@ -9,7 +9,8 @@
     <meta name="theme-color" content="#6C63FF">
     <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;800&display=swap" rel="stylesheet">
     
-    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script><script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-auth.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-auth.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
@@ -69,10 +70,9 @@
     <h1 style="font-size: 28px; text-align:center;">🚀 Uzay Kütüphanesi</h1>
     <p style="color: var(--muted); font-size: 14px; margin-bottom: 25px; text-align:center;">Maceraya kaldığın yerden devam et!</p>
     
-    <!-- KAPTAN GİRİŞİ (Sabit sistem: Tek tıkla otomatik oluşturur ve girer) -->
     <div class="login-section" style="border-color: var(--secondary);">
         <h3 style="color: var(--secondary); font-size: 16px; margin-bottom: 10px;">👨‍🏫 Kaptan (Öğretmen) Girişi</h3>
-        <input type="password" id="kaptanSifre" placeholder="Kaptan Şifreniz (Örn: 123456)">
+        <input type="password" id="kaptanSifre" placeholder="Kaptan Şifreniz">
         <button class="submit-btn" style="background: var(--secondary);" onclick="kaptanGirisYap()">Kaptan Paneline Gir</button>
     </div>
 
@@ -100,6 +100,8 @@
     </div>
 
     <div class="container">
+        
+        <!-- SEKME 1: ANA SAYFA -->
         <div id="tab-home" class="tab-content active">
             <div class="panel">
                 <h3>📊 Rota İstatistikleri</h3>
@@ -110,6 +112,17 @@
                 <div class="progress-box">
                     <div class="progress-title"><span>2. Dönem Yolculuğu</span><span id="donem2Sayfa">0 syf</span></div>
                     <div class="progress-bar-bg"><div class="progress-bar-fill" id="barDonem2"></div></div>
+                </div>
+            </div>
+
+            <!-- YENİ EKLENEN ŞİFRE DEĞİŞTİRME PANELİ -->
+            <div class="panel">
+                <h3>⚙️ Hesap Ayarları</h3>
+                <div style="background: rgba(0,0,0,0.05); padding: 15px; border-radius: 15px; border: 1px solid var(--card-border);">
+                    <small style="color:var(--muted); font-weight:bold;">Yeni Şifreniz:</small>
+                    <input type="password" id="yeniSifre" placeholder="Yeni şifreniz (En az 6 karakter)">
+                    <button class="submit-btn" style="background: #3498db; padding: 10px;" onclick="sifreDegistir()">Şifremi Güncelle</button>
+                    <p id="sifreHataMesaji" style="margin-top: 10px; font-size: 13px; font-weight:bold; text-align:center;"></p>
                 </div>
             </div>
 
@@ -268,7 +281,6 @@
     let globalBooks = [];
     let currentClassFilter = 'Tümü';
 
-    // KAPTAN GİRİŞİ: Önce giriş yapmayı dener, hesap yoksa otomatik oluşturur ve anında içeri alır
     function kaptanGirisYap() {
         const sifre = document.getElementById('kaptanSifre').value.trim();
         if(!sifre) { document.getElementById('hataMesaji').innerText = "Lütfen kaptan şifrenizi girin."; return; }
@@ -297,6 +309,35 @@
     }
 
     function cikisYap() { auth.signOut(); }
+    
+    // YENİ: Şifre Değiştirme Fonksiyonu
+    function sifreDegistir() {
+        const yeniSifre = document.getElementById('yeniSifre').value.trim();
+        const mesajKutusu = document.getElementById('sifreHataMesaji');
+
+        if (!yeniSifre || yeniSifre.length < 6) {
+            mesajKutusu.style.color = "#e74c3c";
+            mesajKutusu.innerText = "⚠️ Şifreniz en az 6 karakter olmalıdır!";
+            return;
+        }
+
+        if (currentUser) {
+            currentUser.updatePassword(yeniSifre).then(() => {
+                mesajKutusu.style.color = "#2ecc71";
+                mesajKutusu.innerText = "✅ Şifreniz başarıyla güncellendi! 🎉";
+                document.getElementById('yeniSifre').value = '';
+                setTimeout(() => { mesajKutusu.innerText = ""; }, 4000);
+            }).catch((error) => {
+                mesajKutusu.style.color = "#e74c3c";
+                // Firebase güvenliği gereği giriş çok eskiyse tekrar giriş yapılmasını ister
+                if (error.code === 'auth/requires-recent-login') {
+                    mesajKutusu.innerText = "⚠️ Güvenlik gereği şifrenizi değiştirmek için 'Gemiden Çıkış Yap' diyerek tekrar giriş yapmalısınız.";
+                } else {
+                    mesajKutusu.innerText = "Hata: " + error.message;
+                }
+            });
+        }
+    }
 
     auth.onAuthStateChanged(user => {
         if (user) {
