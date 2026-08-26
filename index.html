@@ -119,8 +119,8 @@
     <p style="color: var(--muted); font-size: 14px; margin-bottom: 25px;">Maceraya kaldığın yerden devam et!</p>
     
     <div class="school-login-box">
-        <label style="font-size: 12px; color: var(--muted); font-weight:bold;">Okul Numarası:</label>
-        <input type="text" id="ogrenciNo" placeholder="Örn: 145" autocapitalize="none" style="margin-bottom: 12px;">
+        <label style="font-size: 12px; color: var(--muted); font-weight:bold;">Okul No (Kaptan iseniz E-posta):</label>
+        <input type="text" id="ogrenciNo" placeholder="Örn: 145 veya mvlttcm@..." style="margin-bottom: 12px;">
         
         <label style="font-size: 12px; color: var(--muted); font-weight:bold;">Şifre:</label>
         <input type="password" id="ogrenciSifre" placeholder="Şifren (En az 6 karakter)">
@@ -219,11 +219,11 @@
                     <textarea id="notlar" rows="4" placeholder="Kitap hakkındaki düşüncelerin... (En az 5 cümle yazmalısın!)" required></textarea>
                     
                     <!-- YAPAY ZEKA ASİSTANI EKLENTİSİ -->
-                    <div style="margin-top: 5px; margin-bottom: 10px;">
-                        <button type="button" id="aiCheckBtn" onclick="yapayZekaKontrol()" style="background: #8e44ad; color: white; border: none; padding: 10px 15px; border-radius: 8px; font-size: 13px; font-weight: bold; cursor: pointer; display: flex; align-items: center; gap: 5px; width: 100%; justify-content: center; transition: 0.3s;">
+                    <div style="margin-top: 5px; margin-bottom: 15px;">
+                        <button type="button" id="aiCheckBtn" onclick="yapayZekaKontrol()" style="background: #8e44ad; color: white; border: none; padding: 8px 15px; border-radius: 8px; font-size: 12px; font-weight: bold; cursor: pointer; display: flex; align-items: center; gap: 5px; width: 100%; justify-content: center;">
                             ✨ Bilge Astronot'a Yazım Kurallarını Kontrol Ettir
                         </button>
-                        <div id="aiResult" style="display: none; background: rgba(142, 68, 173, 0.1); border-left: 4px solid #8e44ad; padding: 12px; margin-top: 10px; border-radius: 8px; font-size: 13px; color: var(--text); line-height: 1.5;">
+                        <div id="aiResult" style="display: none; background: rgba(142, 68, 173, 0.1); border-left: 4px solid #8e44ad; padding: 10px; margin-top: 10px; border-radius: 8px; font-size: 12px; color: var(--text);">
                             Yükleniyor... Uzay sinyalleri bekleniyor 📡
                         </div>
                     </div>
@@ -373,31 +373,27 @@
     let globalBooks = [];
     let currentClassFilter = 'Tümü';
 
-    // --- AKILLI GİRİŞ SİSTEMİ (ÖĞRETMEN VE ÖĞRENCİ BİR ARADA) ---
     function ogrenciKayitOl() {
-        let noInput = document.getElementById('ogrenciNo').value.trim().toLowerCase();
+        const no = document.getElementById('ogrenciNo').value.trim();
         const sifre = document.getElementById('ogrenciSifre').value.trim();
-        if(!noInput || !sifre) return;
+        if(!no || !sifre) return;
         
-        // Eğer giriş kutusunda @ işareti varsa e-posta olarak kabul et, yoksa öğrenci e-postasına çevir
-        let email = noInput.includes('@') ? noInput : `ogr${noInput}@kutuphane.com`;
+        // Eğer içinde @ varsa doğrudan kullan, yoksa öğrenci mailine çevir
+        let email = no.includes('@') ? no : `ogr${no}@kutuphane.com`;
         
         auth.createUserWithEmailAndPassword(email, sifre)
             .then(() => alert("Kayıt başarılı! Giriş yapabilirsiniz."))
-            .catch((err) => document.getElementById('hataMesaji').innerText = "Bu kayıt zaten var veya şifre çok kısa.");
+            .catch(() => document.getElementById('hataMesaji').innerText = "Bu numara/hesap kayıtlı olabilir.");
     }
 
     function ogrenciGirisYap() {
-        let noInput = document.getElementById('ogrenciNo').value.trim().toLowerCase();
+        const no = document.getElementById('ogrenciNo').value.trim();
         const sifre = document.getElementById('ogrenciSifre').value.trim();
-        if(!noInput || !sifre) return;
+        if(!no || !sifre) return;
         
-        // Kaptan e-postası girdiyse bozmadan kullan, öğrenci numarası girdiyse e-postaya tamamla
-        let email = noInput.includes('@') ? noInput : `ogr${noInput}@kutuphane.com`;
-
-        auth.signInWithEmailAndPassword(email, sifre).catch(() => {
-            document.getElementById('hataMesaji').innerText = "Numara veya şifre yanlış.";
-        });
+        let email = no.includes('@') ? no : `ogr${no}@kutuphane.com`;
+        
+        auth.signInWithEmailAndPassword(email, sifre).catch(() => document.getElementById('hataMesaji').innerText = "Numara veya şifre yanlış.");
     }
 
     function cikisYap() { auth.signOut(); }
@@ -469,7 +465,7 @@
             document.getElementById('kitapAdi').value = '';
             document.getElementById('sayfaSayisi').value = '';
             document.getElementById('notlar').value = '';
-            document.getElementById('aiResult').style.display = 'none'; // Kutu temizlensin
+            document.getElementById('aiResult').style.display = 'none';
             
             confetti({
                 particleCount: 150,
@@ -658,8 +654,10 @@
         sonucKutusu.style.display = 'block';
         sonucKutusu.innerHTML = '✨ Bilge Astronot metnini okuyor, lütfen bekle...';
 
-        // Sizin verdiğiniz API Anahtarı:
-        const API_KEY = "sk-orca-LnkHF6Quiiuj1deUfOaf4gl46Rh75FZ34b7MdtH70Zz"; 
+        // Buraya Qwen veya DeepSeek API anahtarınızı girin
+        const API_KEY = "BURAYA_API_ANAHTARINIZI_YAZIN"; 
+        
+        // DeepSeek için örnek Endpoint (Qwen kullanıyorsanız URL'yi güncelleyin)
         const url = "https://api.deepseek.com/v1/chat/completions"; 
 
         const prompt = `Sen bir Türkçe öğretmenisin. Öğrencinin yazdığı şu metni sadece yazım kuralları, noktalama işaretleri ve anlatım bozuklukları açısından incele. Çocuğun hevesini kırmadan çok nazik ve cesaretlendirici bir dille hatalarını söyle ve metnin doğru halini ver. Metin: "${metin}"`;
@@ -678,15 +676,14 @@
                 })
             });
 
-            if (!response.ok) throw new Error("Yapay Zeka Sunucusu Yanıt Vermedi.");
-
             const data = await response.json();
             const aiCevabi = data.choices[0].message.content;
             
+            // AI Cevabını Ekrana Yazdır
             sonucKutusu.innerHTML = `<strong>👨‍🚀 Bilge Astronot'un Notu:</strong><br><br>${aiCevabi.replace(/\n/g, '<br>')}`;
             
         } catch (error) {
-            sonucKutusu.innerHTML = '⚠️ İletişim koptu! Şu an sinyal alamıyoruz, daha sonra tekrar dene. (Kaptan API Anahtarını kontrol etsin)';
+            sonucKutusu.innerHTML = '⚠️ İletişim koptu! Şu an sinyal alamıyoruz, daha sonra tekrar dene.';
             console.error("Yapay Zeka Hatası:", error);
         }
     }
