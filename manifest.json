@@ -1,0 +1,15 @@
+{
+  "name": "Uzay Kütüphanesi",
+  "short_name": "Uzay Kütüphane",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#1A1A2E",
+  "theme_color": "#6C63FF",
+  "icons": [
+    {
+      "src": "https://upload.wikimedia.org/wikipedia/commons/5/53/Google_%22G%22_Logo.svg",
+      "sizes": "512x512",
+      "type": "image/svg+xml"
+    }
+  ]
+}
