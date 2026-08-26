@@ -5,14 +5,10 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Uzay Kütüphanesi - Okuma Serüveni</title>
     
-    <!-- PWA Manifest -->
     <link rel="manifest" href="manifest.json">
     <meta name="theme-color" content="#6C63FF">
-    
-    <!-- Modern Font: Nunito -->
     <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;800&display=swap" rel="stylesheet">
     
-    <!-- Gerekli Kütüphaneler -->
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-auth.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
@@ -74,14 +70,12 @@
     <h1 style="font-size: 28px; text-align:center;">🚀 Uzay Kütüphanesi</h1>
     <p style="color: var(--muted); font-size: 14px; margin-bottom: 25px; text-align:center;">Maceraya kaldığın yerden devam et!</p>
     
-    <!-- KAPTAN (ÖĞRETMEN) GİRİŞ KUTUSU -->
     <div class="login-section" style="border-color: var(--secondary);">
         <h3 style="color: var(--secondary); font-size: 16px; margin-bottom: 10px;">👨‍🏫 Kaptan (Öğretmen) Girişi</h3>
         <input type="password" id="kaptanSifre" placeholder="Kaptan Şifreniz">
         <button class="submit-btn" style="background: var(--secondary);" onclick="kaptanGirisYap()">Kaptan Paneline Gir</button>
     </div>
 
-    <!-- ÖĞRENCİ GİRİŞ KUTUSU -->
     <div class="login-section">
         <h3 style="color: var(--primary); font-size: 16px; margin-bottom: 10px;">🧑‍🚀 Öğrenci Girişi</h3>
         <input type="number" id="ogrenciNo" placeholder="Okul Numarası (Örn: 145)">
@@ -274,16 +268,14 @@
     let globalBooks = [];
     let currentClassFilter = 'Tümü';
 
-    // KAPTAN (ÖĞRETMEN) GİRİŞİ / OTOMATİK KAYIT
+    // KAPTAN GİRİŞİ (Sadece giriş yapmayı dener, hata verirse uyarı verir)
     function kaptanGirisYap() {
         const sifre = document.getElementById('kaptanSifre').value.trim();
         if(!sifre) { document.getElementById('hataMesaji').innerText = "Lütfen kaptan şifrenizi girin."; return; }
         
-        // Önce giriş yapmayı dene, yoksa otomatik oluştur
         auth.signInWithEmailAndPassword(ogretmenEposta, sifre)
-            .catch(() => {
-                auth.createUserWithEmailAndPassword(ogretmenEposta, sifre)
-                    .catch(err => document.getElementById('hataMesaji').innerText = "Giriş Hatası: " + err.message);
+            .catch(err => {
+                document.getElementById('hataMesaji').innerText = "Giriş Hatası: Bu şifre yanlış veya hesap Google ile bağlı. Firebase konsolundan şifrenizi sıfırlayınız.";
             });
     }
 
@@ -432,9 +424,13 @@
                     <p style="background:rgba(0,0,0,0.1); padding:10px; border-radius:8px; font-style:italic; font-size:13px;">"${book.notlar}"</p>
                     <div style="margin-top:10px; font-weight:bold; font-size:12px; color: ${book.onay ? '#2ecc71' : '#f39c12'};">${book.onay ? '✅ Kaptan Onayladı' : '⏳ Kaptan İnceliyor'}</div>
                     ${isTeacher ? `
+                        <style>
+                          .onayla-label { font-size: 13px !important; font-weight: bold !important; color: var(--text) !important; display: inline-flex !important; align-items: center !important; }
+                          .onayla-label input { width: 18px !important; height: 18px !important; margin-right: 8px !important; accent-color: #2ecc71; }
+                        </style>
                         <div style="margin-top:15px; border-top:1px solid var(--card-border); padding-top:10px; display:flex; justify-content:space-between; align-items:center;">
-                            <label style="cursor:pointer; font-size:13px;"><input type="checkbox" ${book.onay ? 'checked' : ''} onchange="db.ref('kitaplar/${book.id}').update({onay: this.checked})" style="width:18px; height:18px; vertical-align:middle; margin-right:5px;"> Onayla</label>
-                            <button onclick="if(confirm('Silinsin mi?')) db.ref('kitaplar/${book.id}').remove()" style="background:#e74c3c; color:white; border:none; border-radius:5px; padding:6px 12px; cursor:pointer;">🗑️ Sil</button>
+                            <label class="onayla-label"><input type="checkbox" ${book.onay ? 'checked' : ''} onchange="db.ref('kitaplar/${book.id}').update({onay: this.checked})"> Onayla</label>
+                            <button onclick="if(confirm('Silinsin mi?')) db.ref('kitaplar/${book.id}').remove()" style="background:#e74c3c; color:white; border:none; border-radius:5px; padding:6px 12px; cursor:pointer; font-weight:bold;">🗑️ Sil</button>
                         </div>
                     ` : ''}
                 </div>`;
@@ -454,7 +450,7 @@
         XLSX.writeFile(wb, "Uzay_Kutuphanesi_Sinif_Listesi.xlsx");
     }
 
-    function ajandaEkle() {
+    void function ajandaEkle() {
         const t = document.getElementById('agendaDate').value, n = document.getElementById('agendaText').value;
         if(!t || !n) return;
         let a = JSON.parse(localStorage.getItem('kutuphane_ajanda') || '{}');
