@@ -21,11 +21,13 @@
             --card-bg: #16213E; --card-border: rgba(255, 255, 255, 0.1);
             --input-bg: #0F3460; --input-text: #FFFFFF; --nav-bg: #0F3460; --muted: #8a9bb4;
             --main-font: 'Nunito', sans-serif;
+            --wood-dark: #4E342E; --wood-medium: #6D4C41; --wood-light: #8D6E63; --cabinet-bg: rgba(0, 0, 0, 0.3);
         }
         [data-theme="light"] {
             --primary: #5A52D5; --secondary: #E05470; --bg: #F0F2F5; --text: #2D3436; 
             --card-bg: #FFFFFF; --card-border: rgba(0, 0, 0, 0.1);
             --input-bg: #F8F9FA; --input-text: #2D3436; --nav-bg: #FFFFFF; --muted: #636E72;
+            --wood-dark: #6D4C41; --wood-medium: #8D6E63; --wood-light: #A1887F; --cabinet-bg: rgba(0, 0, 0, 0.05);
         }
         
         body.font-dyslexic { --main-font: 'Comic Sans MS', 'Chalkboard SE', sans-serif; }
@@ -67,10 +69,24 @@
         .progress-title { font-size: 13px; color: var(--muted); font-weight: bold; display: flex; justify-content: space-between; margin-bottom: 8px; }
         .progress-bar-bg { width: 100%; background: rgba(0,0,0,0.1); height: 12px; border-radius: 6px; overflow: hidden; }
         .progress-bar-fill { height: 100%; background: linear-gradient(90deg, var(--primary), var(--secondary)); width: 0%; border-radius: 6px; transition: width 0.5s ease;}
+        .progress-bar-fill.target-bar { background: linear-gradient(90deg, #2ecc71, #27ae60); }
         
         .meb-calendar-item { background: var(--input-bg); padding: 10px 12px; border-radius: 10px; margin-bottom: 8px; display: flex; justify-content: space-between; align-items: center; border-left: 4px solid #2ecc71; font-size: 13px; font-weight: 600;}
-        .book-card { background: var(--card-bg); padding: 20px; border-radius: 15px; border: 1px solid var(--card-border); border-left: 6px solid var(--secondary); margin-bottom: 15px; position: relative;}
-        .book-card.approved { border-left-color: #2ecc71; }
+        
+        /* Rozetler (Badges) */
+        .badge-box { background: var(--input-bg); border: 1px solid var(--card-border); padding: 8px 12px; border-radius: 15px; display: inline-flex; align-items: center; gap: 6px; font-size: 12px; font-weight: 800; margin: 5px 5px 5px 0;}
+        .badge-box.locked { opacity: 0.4; filter: grayscale(100%); }
+        
+        /* Kitaplık Dolabı */
+        .bookcase-wrapper { margin-top: 25px; margin-bottom: 30px; filter: drop-shadow(0 15px 25px rgba(0,0,0,0.2)); }
+        .bookcase-top { background: linear-gradient(to bottom, var(--wood-medium), var(--wood-dark)); height: 35px; border-radius: 15px 15px 0 0; border: 3px solid var(--wood-dark); border-bottom: none; box-shadow: inset 0 5px 10px rgba(255,255,255,0.15); position: relative; }
+        .bookcase-top::after { content: "📚 Uzay Arşivi"; position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); color: #fff; font-size: 14px; font-weight: 800; letter-spacing: 1px; text-shadow: 0 2px 4px rgba(0,0,0,0.6); background: rgba(0,0,0,0.2); padding: 3px 15px; border-radius: 10px; }
+        .bookcase { background-color: var(--cabinet-bg); border: 15px solid var(--wood-dark); border-top: none; border-radius: 0 0 15px 15px; padding: 20px; display: grid; grid-template-columns: 1fr; gap: 25px; box-shadow: inset 0 15px 25px rgba(0,0,0,0.4); }
+        @media(min-width: 600px) { .bookcase { grid-template-columns: 1fr 1fr; } }
+        
+        .book-card { background: var(--card-bg); padding: 20px; border-radius: 12px 12px 4px 4px; border: 1px solid var(--card-border); border-bottom: 14px solid var(--wood-light); border-left: 6px solid var(--secondary); position: relative; box-shadow: 0 8px 15px rgba(0,0,0,0.25); transition: transform 0.3s, box-shadow 0.3s; }
+        .book-card:hover { transform: translateY(-5px); box-shadow: 0 15px 25px rgba(0,0,0,0.4); }
+        .book-card.approved { border-left-color: #2ecc71; border-bottom-color: var(--wood-medium); }
         .rank-badge { position: absolute; top: 15px; right: 15px; font-size: 11px; background: rgba(255, 255, 255, 0.1); padding: 4px 8px; border-radius: 8px; color: var(--muted); font-weight: bold;}
         
         .leaderboard-list { list-style: none; padding: 0; margin: 0; }
@@ -79,8 +95,6 @@
         
         .filter-btn { background: var(--input-bg); color: var(--text); border: 1px solid var(--card-border); padding: 8px 12px; border-radius: 8px; cursor: pointer; font-size: 12px; font-weight: bold;}
         .filter-btn.active { background: var(--primary); border-color: var(--primary); color: white;}
-        .onayla-label { font-size: 13px !important; font-weight: bold !important; color: var(--text) !important; display: inline-flex !important; align-items: center !important; cursor: pointer;}
-        .onayla-label input { width: 18px !important; height: 18px !important; margin-right: 8px !important; accent-color: #2ecc71; cursor: pointer;}
     </style>
 </head>
 <body>
@@ -122,8 +136,31 @@
         
         <!-- SEKME 1: ANA SAYFA -->
         <div id="tab-home" class="tab-content active">
+            
+            <div id="studentHomePanel" style="display:none;">
+                <!-- 3. MADDE: KİŞİSEL HEDEF ÇUBUĞU -->
+                <div class="panel" style="border-color: #2ecc71;">
+                    <h3 style="color:#2ecc71;">🎯 Benim Rotam</h3>
+                    <div class="progress-box">
+                        <div class="progress-title">
+                            <span>Hedefe Ulaşma</span>
+                            <span id="hedefText">0 / 0 syf</span>
+                        </div>
+                        <div class="progress-bar-bg"><div class="progress-bar-fill target-bar" id="barHedef"></div></div>
+                    </div>
+                </div>
+
+                <!-- 2. MADDE: ROZETLERİM -->
+                <div class="panel">
+                    <h3>🏅 Uzay Rozetlerim</h3>
+                    <div id="rozetContainer">
+                        <!-- Rozetler JS ile hesaplanıp buraya eklenecek -->
+                    </div>
+                </div>
+            </div>
+
             <div class="panel">
-                <h3>📊 Rota İstatistikleri</h3>
+                <h3>📊 Sınıf İstatistikleri</h3>
                 <div class="progress-box">
                     <div class="progress-title"><span>1. Dönem Yolculuğu</span><span id="donem1Sayfa">0 syf</span></div>
                     <div class="progress-bar-bg"><div class="progress-bar-fill" id="barDonem1"></div></div>
@@ -198,8 +235,13 @@
                 </div>
             </div>
 
-            <h3 style="margin-top: 30px;">📑 Kütüphane Arşivi</h3>
-            <div id="cardsContainer"></div>
+            <!-- KİTAPLIK DOLABI TASARIMI -->
+            <div class="bookcase-wrapper">
+                <div class="bookcase-top"></div>
+                <div id="cardsContainer" class="bookcase">
+                    <!-- Kartlar JS ile buraya raf raf dizilecek -->
+                </div>
+            </div>
         </div>
 
         <!-- SEKME 3: LİDERLİK VE AJANDA -->
@@ -220,10 +262,16 @@
         <!-- SEKME 4: AYARLAR -->
         <div id="tab-settings" class="tab-content">
             
-            <!-- 3. MADDE: PROFİL BİLGİLERİNİ GÜNCELLEME PANELİ -->
             <div class="panel" id="profileSettingsPanel">
-                <h3>🧑‍🚀 Profil Bilgilerim</h3>
+                <h3>🧑‍🚀 Profil & Hedef Bilgilerim</h3>
                 <div style="background: rgba(0,0,0,0.05); padding: 15px; border-radius: 15px; border: 1px solid var(--card-border);">
+                    
+                    <!-- KİŞİSEL HEDEF GİRİŞİ -->
+                    <div style="margin-bottom: 15px; border-bottom: 1px solid var(--card-border); padding-bottom: 15px;">
+                        <small style="color:var(--primary); font-weight:bold;">🎯 Kendime Koyduğum Sayfa Hedefim:</small>
+                        <input type="number" id="set_hedef" placeholder="Örn: 500" style="margin-top:5px; border-color:var(--primary);">
+                    </div>
+
                     <div style="display: grid; grid-template-columns: 1fr 1fr; gap:10px;">
                         <div>
                             <small style="color:var(--muted); font-weight:bold;">Ad:</small>
@@ -249,7 +297,7 @@
                             <input type="number" id="set_okulNo" placeholder="Okul No">
                         </div>
                     </div>
-                    <button class="submit-btn" style="background: #2ecc71; padding: 10px; margin-top: 5px;" onclick="profilGuncelle()">Profil Bilgilerimi Kaydet</button>
+                    <button class="submit-btn" style="background: #2ecc71; padding: 10px; margin-top: 5px;" onclick="profilGuncelle()">Tüm Bilgilerimi Kaydet</button>
                     <p id="profilMesaji" style="margin-top: 10px; font-size: 13px; font-weight:bold; text-align:center;"></p>
                 </div>
             </div>
@@ -268,9 +316,6 @@
                     <option value="nunito">Modern Font (Standart)</option>
                     <option value="dyslexic">Okuma Dostu Font (Harfler daha belirgin)</option>
                 </select>
-                <div style="font-size: 11px; color: var(--secondary); margin-top: -10px; margin-bottom: 15px; font-weight: bold;">
-                    💡 İpucu: Okuma güçlüğü çeken çocuklar için 'Okuma Dostu' seçeneği önerilir.
-                </div>
 
                 <label style="font-weight:bold; color:var(--muted); font-size:13px;">Yazı Boyutu:</label>
                 <select id="sizeSelect" onchange="setFontSize(this.value)" style="margin-bottom: 15px;">
@@ -289,13 +334,12 @@
                 </div>
             </div>
             
-            <!-- 2. MADDE: GEMİDEN ÇIKIŞ YAP BUTONU (AYARLARIN EN ALTINA TAŞINDI) -->
             <button onclick="cikisYap()" class="submit-btn logout-btn">🚪 Gemiden Çıkış Yap</button>
         </div>
 
     </div>
 
-    <!-- ALT NAVİGASYON BARI (4 SEKMELİ) -->
+    <!-- ALT NAVİGASYON BARI -->
     <div class="bottom-nav">
         <button class="nav-btn active" onclick="switchTab('tab-home', this)"><span>🏠</span>Ana Ekran</button>
         <button class="nav-btn" onclick="switchTab('tab-books', this)"><span>📚</span>Kütüphane</button>
@@ -305,7 +349,30 @@
 </div>
 
 <script>
-    // --- TEMA VE AYARLAR YÖNETİMİ ---
+    // --- SES MOTORU (Dış dosyasız sihirli ses!) ---
+    function playMagicSound() {
+        try {
+            const ctx = new (window.AudioContext || window.webkitAudioContext)();
+            const playTone = (freq, time) => {
+                const osc = ctx.createOscillator();
+                const gain = ctx.createGain();
+                osc.type = 'sine';
+                osc.frequency.value = freq;
+                osc.connect(gain);
+                gain.connect(ctx.destination);
+                osc.start(time);
+                gain.gain.exponentialRampToValueAtTime(0.00001, time + 0.5);
+                osc.stop(time + 0.5);
+            };
+            // Do majör sihirli arpej
+            playTone(523.25, ctx.currentTime);      // Do
+            playTone(659.25, ctx.currentTime + 0.1); // Mi
+            playTone(783.99, ctx.currentTime + 0.2); // Sol
+            playTone(1046.50, ctx.currentTime + 0.3); // İnce Do
+        } catch(e) {} // Tarayıcı desteklemiyorsa sessizce geç
+    }
+
+    // --- TEMA VE AYARLAR ---
     const savedTheme = localStorage.getItem('theme') || 'dark';
     const savedFont = localStorage.getItem('fontStyle') || 'nunito';
     const savedSize = localStorage.getItem('fontSize') || 'normal';
@@ -347,24 +414,23 @@
         localStorage.setItem('fontSize', sizeType);
     }
 
-    // --- PROFİL BİLGİLERİNİ GÜNCELLEME FONKSİYONLARI ---
     function profilBilgileriniYukle() {
         const isim = localStorage.getItem('kutuphane_isim') || '';
         const soyisim = localStorage.getItem('kutuphane_soyisim') || '';
         const sinif = localStorage.getItem('kutuphane_sinif') || '';
         const no = localStorage.getItem('kutuphane_no') || '';
+        const hedef = localStorage.getItem('kutuphane_hedef') || '500';
 
-        // Form alanlarını doldur
         document.getElementById('isim').value = isim;
         document.getElementById('soyisim').value = soyisim;
         if(sinif) document.getElementById('sinif').value = sinif;
         document.getElementById('okulNo').value = no;
 
-        // Ayarlar sekmesindeki alanları doldur
         document.getElementById('set_isim').value = isim;
         document.getElementById('set_soyisim').value = soyisim;
         if(sinif) document.getElementById('set_sinif').value = sinif;
         document.getElementById('set_okulNo').value = no;
+        document.getElementById('set_hedef').value = hedef;
     }
 
     function profilGuncelle() {
@@ -372,6 +438,7 @@
         const soyisim = document.getElementById('set_soyisim').value.trim();
         const sinif = document.getElementById('set_sinif').value;
         const no = document.getElementById('set_okulNo').value.trim();
+        const hedef = document.getElementById('set_hedef').value.trim() || '500';
         const msg = document.getElementById('profilMesaji');
 
         if(!isim || !soyisim || !sinif || !no) {
@@ -384,17 +451,17 @@
         localStorage.setItem('kutuphane_soyisim', soyisim);
         localStorage.setItem('kutuphane_sinif', sinif);
         localStorage.setItem('kutuphane_no', no);
+        localStorage.setItem('kutuphane_hedef', hedef);
 
-        // Form alanlarını da güncelle
         profilBilgileriniYukle();
         akilliKarsilamaGuncelle();
+        verileriGetir(); // Hedef barını güncelle
 
         msg.style.color = "#2ecc71";
-        msg.innerText = "✅ Profil bilgileriniz başarıyla güncellendi!";
+        msg.innerText = "✅ Bilgileriniz başarıyla güncellendi!";
         setTimeout(() => { msg.innerText = ""; }, 3500);
     }
 
-    // --- SEKME YÖNETİMİ ---
     function switchTab(tabId, btnElement) {
         document.querySelectorAll('.tab-content').forEach(tab => tab.classList.remove('active'));
         document.querySelectorAll('.nav-btn').forEach(btn => btn.classList.remove('active'));
@@ -425,7 +492,7 @@
         input.value = words.map(w => w.length > 0 ? w.charAt(0).toLocaleUpperCase('tr-TR') + w.slice(1).toLocaleLowerCase('tr-TR') : '').join(' ');
     }
 
-    // --- FİREBASE YAPILANDIRMASI ---
+    // --- FİREBASE ---
     const firebaseConfig = {
         apiKey: "AIzaSyAOncvYBGQVQ7M7SN1vHgNNCDyGQK26ph4",
         authDomain: "kitap-kurdu-bc094.firebaseapp.com",
@@ -493,26 +560,21 @@
     function sifreDegistir() {
         const yeniSifre = document.getElementById('yeniSifre').value.trim();
         const mesajKutusu = document.getElementById('sifreHataMesaji');
-
         if (!yeniSifre || yeniSifre.length < 6) {
             mesajKutusu.style.color = "#e74c3c";
             mesajKutusu.innerText = "⚠️ Şifreniz en az 6 karakter olmalıdır!";
             return;
         }
-
         if (currentUser) {
             currentUser.updatePassword(yeniSifre).then(() => {
                 mesajKutusu.style.color = "#2ecc71";
-                mesajKutusu.innerText = "✅ Şifreniz başarıyla güncellendi! 🎉";
+                mesajKutusu.innerText = "✅ Şifreniz güncellendi! 🎉";
                 document.getElementById('yeniSifre').value = '';
                 setTimeout(() => { mesajKutusu.innerText = ""; }, 4000);
             }).catch((error) => {
                 mesajKutusu.style.color = "#e74c3c";
-                if (error.code === 'auth/requires-recent-login') {
-                    mesajKutusu.innerText = "⚠️ Güvenlik gereği şifrenizi değiştirmek için 'Gemiden Çıkış Yap' diyerek tekrar giriş yapmalısınız.";
-                } else {
-                    mesajKutusu.innerText = "Hata: " + error.message;
-                }
+                if (error.code === 'auth/requires-recent-login') mesajKutusu.innerText = "⚠️ Güvenlik gereği tekrar giriş yapmalısınız.";
+                else mesajKutusu.innerText = "Hata: " + error.message;
             });
         }
     }
@@ -527,11 +589,13 @@
             if (isTeacher) {
                 document.getElementById('teacherPanel').style.display = 'block';
                 document.getElementById('studentFormPanel').style.display = 'none';
-                document.getElementById('profileSettingsPanel').style.display = 'none'; // Kaptana profil düzenleme gerekmez
+                document.getElementById('profileSettingsPanel').style.display = 'none';
+                document.getElementById('studentHomePanel').style.display = 'none';
             } else {
                 document.getElementById('teacherPanel').style.display = 'none';
                 document.getElementById('studentFormPanel').style.display = 'block';
                 document.getElementById('profileSettingsPanel').style.display = 'block';
+                document.getElementById('studentHomePanel').style.display = 'block';
                 profilBilgileriniYukle();
             }
             akilliKarsilamaGuncelle(); 
@@ -568,35 +632,44 @@
             localStorage.setItem('kutuphane_no', okulNo);
             akilliKarsilamaGuncelle(); 
         }
+        
+        // 4. MADDE: SİHİRLİ SES EFEKTİ VE PATLAMA
+        playMagicSound();
+        confetti({ particleCount: 150, spread: 80, origin: { y: 0.6 } });
 
         db.ref('kitaplar').push({
             uid: currentUser.uid, 
-            isim: isim,
-            soyisim: soyisim,
-            sinif: sinif,
-            okulNo: okulNo,
+            isim: isim, soyisim: soyisim, sinif: sinif, okulNo: okulNo,
             kitapAdi: document.getElementById('kitapAdi').value,
             sayfaSayisi: parseInt(document.getElementById('sayfaSayisi').value),
-            yildiz: seciliYildiz,
-            baslama: document.getElementById('baslama').value,
-            bitis: document.getElementById('bitis').value,
-            notlar: notlar, 
-            onay: false,
-            timestamp: firebase.database.ServerValue.TIMESTAMP
+            yildiz: seciliYildiz, baslama: document.getElementById('baslama').value,
+            bitis: document.getElementById('bitis').value, notlar: notlar, 
+            onay: false, kaptanNotu: "", timestamp: firebase.database.ServerValue.TIMESTAMP
         }).then(() => {
             document.getElementById('kitapAdi').value = '';
             document.getElementById('sayfaSayisi').value = '';
             document.getElementById('notlar').value = '';
-            confetti({ particleCount: 150, spread: 80, origin: { y: 0.6 } });
             setTimeout(() => alert("Harika! Keşif kartın rafa eklendi. Onay bekleniyor. 🚀"), 500);
         });
     });
+
+    // 1. MADDE: KAPTANIN SEYİR DEFTERİ KAYIT FONKSİYONU
+    window.kaptanNotKaydet = function(id) {
+        const notIcerik = document.getElementById('not_' + id).value.trim();
+        db.ref('kitaplar/' + id).update({ kaptanNotu: notIcerik })
+            .then(() => alert("Kaptan Notu başarıyla kaydedildi! 👨‍🏫"));
+    }
 
     function verileriGetir() {
         db.ref('kitaplar').on('value', (snapshot) => {
             const data = snapshot.val();
             globalBooks = data ? Object.keys(data).map(key => ({ id: key, ...data[key] })) : [];
             let studentStats = {}, toplamDonem1 = 0, toplamDonem2 = 0;
+            
+            // Kişisel istatistikler (Öğrenci İçin)
+            let kisiselOnayliSayfa = 0;
+            let kisiselOnayliKitapSayisi = 0;
+            let elestirmenMi = false;
 
             globalBooks.forEach(b => {
                 if(b.onay) {
@@ -604,8 +677,31 @@
                     const ay = new Date(b.bitis).getMonth() + 1;
                     if(ay >= 9 || ay <= 1) toplamDonem1 += b.sayfaSayisi;
                     else if(ay >= 2 && ay <= 6) toplamDonem2 += b.sayfaSayisi;
+
+                    if(!isTeacher && b.uid === currentUser.uid) {
+                        kisiselOnayliSayfa += b.sayfaSayisi;
+                        kisiselOnayliKitapSayisi++;
+                        if(b.yildiz === 5 && b.notlar.length > 50) elestirmenMi = true;
+                    }
                 }
             });
+
+            // 3. MADDE: KİŞİSEL HEDEF BARI GÜNCELLEMESİ
+            if(!isTeacher) {
+                const hedef = parseInt(localStorage.getItem('kutuphane_hedef') || '500');
+                const hedefYuzde = Math.min(100, Math.round((kisiselOnayliSayfa / hedef) * 100));
+                document.getElementById('hedefText').innerText = `${kisiselOnayliSayfa} / ${hedef} syf`;
+                document.getElementById('barHedef').style.width = hedefYuzde + "%";
+                
+                // 2. MADDE: ROZET SİSTEMİ
+                const rozetDiv = document.getElementById('rozetContainer');
+                rozetDiv.innerHTML = `
+                    <div class="badge-box ${kisiselOnayliKitapSayisi >= 1 ? '' : 'locked'}">🚀 İlk Adım</div>
+                    <div class="badge-box ${elestirmenMi ? '' : 'locked'}">📝 Baş Eleştirmen</div>
+                    <div class="badge-box ${kisiselOnayliKitapSayisi >= 3 ? '' : 'locked'}">🛸 Uzay Gezgini</div>
+                    <div class="badge-box ${kisiselOnayliKitapSayisi >= 10 ? '' : 'locked'}">👑 Galaksi Fatihi</div>
+                `;
+            }
 
             document.getElementById('donem1Sayfa').innerText = toplamDonem1 + " syf";
             document.getElementById('barDonem1').style.width = Math.min(100, Math.round((toplamDonem1 / 2000) * 100)) + "%";
@@ -641,6 +737,13 @@
 
         list.reverse().forEach(book => {
             const stars = "⭐".repeat(book.yildiz || 5);
+            // 1. MADDE: KAPTAN NOTU BÖLÜMÜ (ÖĞRENCİ İÇİN)
+            const kaptanNotuHTML = book.kaptanNotu ? `
+                <div style="background: rgba(108, 99, 255, 0.15); border-left: 4px solid var(--primary); padding: 10px; margin-top: 15px; border-radius: 8px;">
+                    <span style="font-size:12px; font-weight:800; color:var(--primary);">👨‍🏫 Kaptanın Seyir Defteri:</span>
+                    <p style="margin:5px 0 0 0; font-size:13px; font-style:italic; font-weight:600;">"${book.kaptanNotu}"</p>
+                </div>` : '';
+
             container.innerHTML += `
                 <div class="book-card ${book.onay ? 'approved' : ''}">
                     <div style="background:var(--primary); color:white; padding:4px 8px; border-radius:5px; font-size:12px; display:inline-block; font-weight:bold;">${book.sinif} - No: ${book.okulNo}</div>
@@ -650,7 +753,16 @@
                     <p style="margin:5px 0; font-size:13px;">👨‍🚀 ${book.isim} ${book.soyisim} | 📑 ${book.sayfaSayisi} syf</p>
                     <p style="background:rgba(0,0,0,0.1); padding:10px; border-radius:8px; font-style:italic; font-size:13px;">"${book.notlar}"</p>
                     <div style="margin-top:10px; font-weight:bold; font-size:12px; color: ${book.onay ? '#2ecc71' : '#f39c12'};">${book.onay ? '✅ Kaptan Onayladı' : '⏳ Kaptan İnceliyor'}</div>
+                    
+                    ${!isTeacher ? kaptanNotuHTML : ''}
+
                     ${isTeacher ? `
+                        <!-- 1. MADDE: KAPTAN NOTU GİRİŞİ (ÖĞRETMEN İÇİN) -->
+                        <div style="margin-top:15px; background:rgba(0,0,0,0.05); padding:10px; border-radius:10px; border:1px solid var(--card-border);">
+                            <textarea id="not_${book.id}" rows="2" style="margin-bottom:8px;" placeholder="Bu keşif için Kaptan Notu yazın...">${book.kaptanNotu || ''}</textarea>
+                            <button onclick="kaptanNotKaydet('${book.id}')" class="submit-btn" style="padding:8px; font-size:12px;">💬 Kaptan Notunu Kaydet</button>
+                        </div>
+                        
                         <div style="margin-top:15px; border-top:1px solid var(--card-border); padding-top:10px; display:flex; justify-content:space-between; align-items:center;">
                             <label class="onayla-label"><input type="checkbox" ${book.onay ? 'checked' : ''} onchange="db.ref('kitaplar/${book.id}').update({onay: this.checked})"> Onayla</label>
                             <button onclick="if(confirm('Silinsin mi?')) db.ref('kitaplar/${book.id}').remove()" style="background:#e74c3c; color:white; border:none; border-radius:5px; padding:6px 12px; cursor:pointer; font-weight:bold;">🗑️ Sil</button>
@@ -665,7 +777,9 @@
         const ws_data = globalBooks.map(b => ({
             "Ad Soyad": b.isim + " " + b.soyisim, "Sınıf": b.sinif, "Okul No": b.okulNo,
             "Kitap Adı": b.kitapAdi, "Sayfa": b.sayfaSayisi, "Puan": (b.yildiz || 5) + " Yıldız",
-            "Onay": b.onay ? "Onaylandı" : "Bekliyor", "Notlar": b.notlar
+            "Onay": b.onay ? "Onaylandı" : "Bekliyor", 
+            "Öğrenci Notu": b.notlar,
+            "Kaptan Notu": b.kaptanNotu || "-"
         }));
         const ws = XLSX.utils.json_to_sheet(ws_data);
         const wb = XLSX.utils.book_new();
