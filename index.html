@@ -20,48 +20,67 @@
             --primary: #6C63FF; --secondary: #FF6584; --bg: #1A1A2E; --text: #FFFFFF; 
             --card-bg: #16213E; --card-border: rgba(255, 255, 255, 0.1);
             --input-bg: #0F3460; --input-text: #FFFFFF; --nav-bg: #0F3460; --muted: #8a9bb4;
+            --main-font: 'Nunito', sans-serif;
         }
         [data-theme="light"] {
             --primary: #5A52D5; --secondary: #E05470; --bg: #F0F2F5; --text: #2D3436; 
             --card-bg: #FFFFFF; --card-border: rgba(0, 0, 0, 0.1);
             --input-bg: #F8F9FA; --input-text: #2D3436; --nav-bg: #FFFFFF; --muted: #636E72;
         }
-        body { font-family: 'Nunito', sans-serif; background-color: var(--bg); color: var(--text); margin: 0; padding: 0; padding-bottom: 80px; transition: 0.3s; }
+        
+        body.font-dyslexic { --main-font: 'Comic Sans MS', 'Chalkboard SE', sans-serif; }
+        body.font-large { font-size: 110%; }
+
+        body { font-family: var(--main-font); background-color: var(--bg); color: var(--text); margin: 0; padding: 0; padding-bottom: 80px; transition: 0.3s; }
         h1, h2, h3 { color: var(--secondary); text-align: center; margin-top: 0;}
         .app-header { background: var(--card-bg); padding: 15px 20px; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--card-border); position: sticky; top: 0; z-index: 100;}
         .greeting-text { font-size: 18px; font-weight: 800; color: var(--primary); margin: 0;}
         .theme-btn { background: none; border: none; font-size: 24px; cursor: pointer; color: var(--text); }
         .container { max-width: 800px; margin: 20px auto; padding: 0 15px; }
+        
         .tab-content { display: none; animation: fadeIn 0.4s; }
         .tab-content.active { display: block; }
         @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+        
         .panel { background: var(--card-bg); padding: 20px; border-radius: 20px; border: 1px solid var(--card-border); margin-bottom: 20px; }
+        
         .bottom-nav { position: fixed; bottom: 0; left: 0; right: 0; background: var(--nav-bg); display: flex; justify-content: space-around; padding: 10px 0; border-top: 1px solid var(--card-border); z-index: 100;}
-        .nav-btn { background: none; border: none; color: var(--muted); font-family: inherit; font-size: 12px; font-weight: 800; display: flex; flex-direction: column; align-items: center; gap: 5px; cursor: pointer; flex: 1;}
-        .nav-btn span { font-size: 22px; }
+        .nav-btn { background: none; border: none; color: var(--muted); font-family: inherit; font-size: 11px; font-weight: 800; display: flex; flex-direction: column; align-items: center; gap: 5px; cursor: pointer; flex: 1; padding: 5px;}
+        .nav-btn span { font-size: 20px; }
         .nav-btn.active { color: var(--primary); transform: translateY(-3px);}
+        
         #loginScreen { max-width: 420px; margin: 60px auto; background: var(--card-bg); padding: 35px 25px; border-radius: 20px; border: 1px solid var(--card-border);}
         .login-section { background: rgba(0,0,0,0.05); padding: 20px; border-radius: 15px; border: 1px solid var(--card-border); margin-bottom: 20px; }
-        input, select, textarea { width: 100%; padding: 12px; border: 1px solid var(--card-border); border-radius: 12px; box-sizing: border-box; font-family: inherit; font-size: 14px; background: var(--input-bg); color: var(--input-text); outline: none; margin-bottom: 12px; }
-        .submit-btn { background-color: var(--primary); color: white; border: none; padding: 14px; border-radius: 12px; font-weight: 800; font-size: 15px; cursor: pointer; width: 100%; }
-        .logout-btn { background-color: #e74c3c; width: 100%; margin-top: 30px; }
+        
+        input, select, textarea { width: 100%; padding: 12px; border: 1px solid var(--card-border); border-radius: 12px; box-sizing: border-box; font-family: inherit; font-size: 14px; background: var(--input-bg); color: var(--input-text); outline: none; margin-bottom: 12px; transition: 0.3s; }
+        input:focus, select:focus, textarea:focus { border-color: var(--primary); }
+        .submit-btn { background-color: var(--primary); color: white; border: none; padding: 14px; border-radius: 12px; font-weight: 800; font-size: 15px; cursor: pointer; width: 100%; transition: 0.2s;}
+        .submit-btn:hover { opacity: 0.9; }
+        .logout-btn { background-color: #e74c3c; width: 100%; margin-top: 15px; }
+        
         .rating { display: flex; flex-direction: row-reverse; justify-content: flex-end; gap: 5px;}
         .rating input { display: none; }
         .rating label { font-size: 30px; color: var(--card-border); cursor: pointer;}
         .rating input:checked ~ label, .rating label:hover, .rating label:hover ~ label { color: #f1c40f; }
+        
         .progress-box { background: var(--input-bg); padding: 15px; border-radius: 15px; margin-bottom: 15px; border: 1px solid var(--card-border); }
         .progress-title { font-size: 13px; color: var(--muted); font-weight: bold; display: flex; justify-content: space-between; margin-bottom: 8px; }
         .progress-bar-bg { width: 100%; background: rgba(0,0,0,0.1); height: 12px; border-radius: 6px; overflow: hidden; }
-        .progress-bar-fill { height: 100%; background: linear-gradient(90deg, var(--primary), var(--secondary)); width: 0%; border-radius: 6px; }
+        .progress-bar-fill { height: 100%; background: linear-gradient(90deg, var(--primary), var(--secondary)); width: 0%; border-radius: 6px; transition: width 0.5s ease;}
+        
         .meb-calendar-item { background: var(--input-bg); padding: 10px 12px; border-radius: 10px; margin-bottom: 8px; display: flex; justify-content: space-between; align-items: center; border-left: 4px solid #2ecc71; font-size: 13px; font-weight: 600;}
         .book-card { background: var(--card-bg); padding: 20px; border-radius: 15px; border: 1px solid var(--card-border); border-left: 6px solid var(--secondary); margin-bottom: 15px; position: relative;}
         .book-card.approved { border-left-color: #2ecc71; }
         .rank-badge { position: absolute; top: 15px; right: 15px; font-size: 11px; background: rgba(255, 255, 255, 0.1); padding: 4px 8px; border-radius: 8px; color: var(--muted); font-weight: bold;}
+        
         .leaderboard-list { list-style: none; padding: 0; margin: 0; }
         .leaderboard-list li { background: var(--input-bg); margin-bottom: 10px; padding: 12px; border-radius: 10px; font-size: 14px; font-weight: 600; display: flex; justify-content: space-between; align-items: center; border-left: 4px solid var(--primary); }
         .leader-1 { background: linear-gradient(45deg, #f1c40f, #e67e22) !important; color: #fff !important; transform: scale(1.02); box-shadow: 0 5px 15px rgba(241, 196, 15, 0.4);}
+        
         .filter-btn { background: var(--input-bg); color: var(--text); border: 1px solid var(--card-border); padding: 8px 12px; border-radius: 8px; cursor: pointer; font-size: 12px; font-weight: bold;}
         .filter-btn.active { background: var(--primary); border-color: var(--primary); color: white;}
+        .onayla-label { font-size: 13px !important; font-weight: bold !important; color: var(--text) !important; display: inline-flex !important; align-items: center !important; cursor: pointer;}
+        .onayla-label input { width: 18px !important; height: 18px !important; margin-right: 8px !important; accent-color: #2ecc71; cursor: pointer;}
     </style>
 </head>
 <body>
@@ -72,14 +91,14 @@
     
     <div class="login-section" style="border-color: var(--secondary);">
         <h3 style="color: var(--secondary); font-size: 16px; margin-bottom: 10px;">👨‍🏫 Kaptan (Öğretmen) Girişi</h3>
-        <input type="password" id="kaptanSifre" placeholder="Kaptan Şifreniz">
+        <input type="password" id="kaptanSifre" placeholder="Kaptan Şifreniz" onkeydown="if(event.key === 'Enter') kaptanGirisYap()">
         <button class="submit-btn" style="background: var(--secondary);" onclick="kaptanGirisYap()">Kaptan Paneline Gir</button>
     </div>
 
     <div class="login-section">
         <h3 style="color: var(--primary); font-size: 16px; margin-bottom: 10px;">🧑‍🚀 Öğrenci Girişi</h3>
         <input type="number" id="ogrenciNo" placeholder="Okul Numarası (Örn: 145)">
-        <input type="password" id="ogrenciSifre" placeholder="Şifren (En az 6 karakter)">
+        <input type="password" id="ogrenciSifre" placeholder="Şifren (En az 6 karakter)" onkeydown="if(event.key === 'Enter') ogrenciGirisYap()">
         <div style="font-size: 11px; color: var(--muted); margin-top: -6px; margin-bottom: 12px; font-weight: bold;">
             💡 İpucu: Okul numaran ve adını birleştirebilirsin (Örn: 145ali)
         </div>
@@ -115,17 +134,6 @@
                 </div>
             </div>
 
-            <!-- YENİ EKLENEN ŞİFRE DEĞİŞTİRME PANELİ -->
-            <div class="panel">
-                <h3>⚙️ Hesap Ayarları</h3>
-                <div style="background: rgba(0,0,0,0.05); padding: 15px; border-radius: 15px; border: 1px solid var(--card-border);">
-                    <small style="color:var(--muted); font-weight:bold;">Yeni Şifreniz:</small>
-                    <input type="password" id="yeniSifre" placeholder="Yeni şifreniz (En az 6 karakter)">
-                    <button class="submit-btn" style="background: #3498db; padding: 10px;" onclick="sifreDegistir()">Şifremi Güncelle</button>
-                    <p id="sifreHataMesaji" style="margin-top: 10px; font-size: 13px; font-weight:bold; text-align:center;"></p>
-                </div>
-            </div>
-
             <div class="panel">
                 <h3>📅 MEB 2026-2027 Takvimi</h3>
                 <div class="meb-calendar-item"><span>1. Dönem Başlangıcı</span><span style="color:#2ecc71;">14 Eyl 26</span></div>
@@ -134,17 +142,16 @@
                 <div class="meb-calendar-item"><span>2. Ara Tatil</span><span style="color:#2ecc71;">08 Mar 27</span></div>
                 <div class="meb-calendar-item"><span>Yaz Tatili Başlar</span><span style="color:#2ecc71;">25 Haz 27</span></div>
             </div>
-            
-            <button onclick="cikisYap()" class="submit-btn logout-btn">🚪 Gemiden Çıkış Yap</button>
         </div>
 
+        <!-- SEKME 2: KÜTÜPHANE -->
         <div id="tab-books" class="tab-content">
             <div class="panel" id="studentFormPanel" style="border: 2px solid var(--primary);">
                 <h3>🚀 Yeni Keşif Ekle</h3>
                 <form id="bookForm" style="display: grid; gap: 12px;">
                     <div style="display: grid; grid-template-columns: 1fr 1fr; gap:12px;">
-                        <input type="text" id="isim" placeholder="Adın" required oninput="formatText(this)">
-                        <input type="text" id="soyisim" placeholder="Soyadın" required oninput="formatText(this)">
+                        <input type="text" id="isim" placeholder="Adın" required onblur="formatText(this)">
+                        <input type="text" id="soyisim" placeholder="Soyadın" required onblur="formatText(this)">
                     </div>
                     <div style="display: grid; grid-template-columns: 1fr 1fr; gap:12px;">
                         <select id="sinif" required>
@@ -156,7 +163,7 @@
                         <input type="number" id="okulNo" placeholder="Okul No" required>
                     </div>
                     <input type="text" id="kitapAdi" placeholder="Okuduğun Kitabın Adı" required>
-                    <input type="number" id="sayfaSayisi" placeholder="Sayfa Sayısı" required>
+                    <input type="number" id="sayfaSayisi" placeholder="Sayfa Sayısı" required min="1">
                     
                     <div>
                         <small style="color:var(--muted); font-weight:bold;">Kitaba Puanın:</small>
@@ -195,6 +202,7 @@
             <div id="cardsContainer"></div>
         </div>
 
+        <!-- SEKME 3: LİDERLİK VE AJANDA -->
         <div id="tab-leaderboard" class="tab-content">
             <div class="panel">
                 <h3>🏆 Galaksi Liderleri</h3>
@@ -208,28 +216,185 @@
                 <ul id="agendaList" style="list-style:none; padding:0; margin-top:20px; font-size:14px;"></ul>
             </div>
         </div>
+
+        <!-- SEKME 4: AYARLAR -->
+        <div id="tab-settings" class="tab-content">
+            
+            <!-- 3. MADDE: PROFİL BİLGİLERİNİ GÜNCELLEME PANELİ -->
+            <div class="panel" id="profileSettingsPanel">
+                <h3>🧑‍🚀 Profil Bilgilerim</h3>
+                <div style="background: rgba(0,0,0,0.05); padding: 15px; border-radius: 15px; border: 1px solid var(--card-border);">
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap:10px;">
+                        <div>
+                            <small style="color:var(--muted); font-weight:bold;">Ad:</small>
+                            <input type="text" id="set_isim" placeholder="Adınız" onblur="formatText(this)">
+                        </div>
+                        <div>
+                            <small style="color:var(--muted); font-weight:bold;">Soyad:</small>
+                            <input type="text" id="set_soyisim" placeholder="Soyadınız" onblur="formatText(this)">
+                        </div>
+                    </div>
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap:10px;">
+                        <div>
+                            <small style="color:var(--muted); font-weight:bold;">Sınıf:</small>
+                            <select id="set_sinif">
+                                <option value="" disabled selected>Sınıf Seçin</option>
+                                <option value="7/A">7/A</option>
+                                <option value="8/C">8/C</option>
+                                <option value="8/D">8/D</option>
+                            </select>
+                        </div>
+                        <div>
+                            <small style="color:var(--muted); font-weight:bold;">Okul No:</small>
+                            <input type="number" id="set_okulNo" placeholder="Okul No">
+                        </div>
+                    </div>
+                    <button class="submit-btn" style="background: #2ecc71; padding: 10px; margin-top: 5px;" onclick="profilGuncelle()">Profil Bilgilerimi Kaydet</button>
+                    <p id="profilMesaji" style="margin-top: 10px; font-size: 13px; font-weight:bold; text-align:center;"></p>
+                </div>
+            </div>
+
+            <div class="panel">
+                <h3>🎨 Görünüm Ayarları</h3>
+                
+                <label style="font-weight:bold; color:var(--muted); font-size:13px;">Uygulama Teması:</label>
+                <select id="themeSelect" onchange="setThemeFromSelect(this.value)" style="margin-bottom: 15px;">
+                    <option value="dark">🌙 Uzay (Karanlık) Teması</option>
+                    <option value="light">☀️ Gündüz (Aydınlık) Teması</option>
+                </select>
+
+                <label style="font-weight:bold; color:var(--muted); font-size:13px;">Yazı Tipi (Okuma Kolaylığı):</label>
+                <select id="fontSelect" onchange="setFontStyle(this.value)" style="margin-bottom: 15px;">
+                    <option value="nunito">Modern Font (Standart)</option>
+                    <option value="dyslexic">Okuma Dostu Font (Harfler daha belirgin)</option>
+                </select>
+                <div style="font-size: 11px; color: var(--secondary); margin-top: -10px; margin-bottom: 15px; font-weight: bold;">
+                    💡 İpucu: Okuma güçlüğü çeken çocuklar için 'Okuma Dostu' seçeneği önerilir.
+                </div>
+
+                <label style="font-weight:bold; color:var(--muted); font-size:13px;">Yazı Boyutu:</label>
+                <select id="sizeSelect" onchange="setFontSize(this.value)" style="margin-bottom: 15px;">
+                    <option value="normal">Normal Boyut</option>
+                    <option value="large">Büyük Yazılar</option>
+                </select>
+            </div>
+
+            <div class="panel">
+                <h3>🔐 Güvenlik Ayarları</h3>
+                <div style="background: rgba(0,0,0,0.05); padding: 15px; border-radius: 15px; border: 1px solid var(--card-border);">
+                    <small style="color:var(--muted); font-weight:bold;">Yeni Şifreniz:</small>
+                    <input type="password" id="yeniSifre" placeholder="Yeni şifrenizi girin (En az 6 hane)">
+                    <button class="submit-btn" style="background: #3498db; padding: 10px;" onclick="sifreDegistir()">Şifremi Güncelle</button>
+                    <p id="sifreHataMesaji" style="margin-top: 10px; font-size: 13px; font-weight:bold; text-align:center;"></p>
+                </div>
+            </div>
+            
+            <!-- 2. MADDE: GEMİDEN ÇIKIŞ YAP BUTONU (AYARLARIN EN ALTINA TAŞINDI) -->
+            <button onclick="cikisYap()" class="submit-btn logout-btn">🚪 Gemiden Çıkış Yap</button>
+        </div>
+
     </div>
 
+    <!-- ALT NAVİGASYON BARI (4 SEKMELİ) -->
     <div class="bottom-nav">
         <button class="nav-btn active" onclick="switchTab('tab-home', this)"><span>🏠</span>Ana Ekran</button>
         <button class="nav-btn" onclick="switchTab('tab-books', this)"><span>📚</span>Kütüphane</button>
         <button class="nav-btn" onclick="switchTab('tab-leaderboard', this)"><span>🏆</span>Liderlik</button>
+        <button class="nav-btn" onclick="switchTab('tab-settings', this)"><span>⚙️</span>Ayarlar</button>
     </div>
 </div>
 
 <script>
+    // --- TEMA VE AYARLAR YÖNETİMİ ---
     const savedTheme = localStorage.getItem('theme') || 'dark';
+    const savedFont = localStorage.getItem('fontStyle') || 'nunito';
+    const savedSize = localStorage.getItem('fontSize') || 'normal';
+
     document.documentElement.setAttribute('data-theme', savedTheme);
     document.getElementById('themeToggle').innerText = savedTheme === 'light' ? '🌙' : '☀️';
+    
+    window.addEventListener('DOMContentLoaded', () => {
+        document.getElementById('themeSelect').value = savedTheme;
+        document.getElementById('fontSelect').value = savedFont;
+        document.getElementById('sizeSelect').value = savedSize;
+        setFontStyle(savedFont);
+        setFontSize(savedSize);
+        profilBilgileriniYukle();
+    });
 
     function toggleTheme() {
         const current = document.documentElement.getAttribute('data-theme');
         const newTheme = current === 'light' ? 'dark' : 'light';
-        document.documentElement.setAttribute('data-theme', newTheme);
-        localStorage.setItem('theme', newTheme);
-        document.getElementById('themeToggle').innerText = newTheme === 'light' ? '🌙' : '☀️';
+        setThemeFromSelect(newTheme);
+        document.getElementById('themeSelect').value = newTheme;
     }
 
+    function setThemeFromSelect(theme) {
+        document.documentElement.setAttribute('data-theme', theme);
+        localStorage.setItem('theme', theme);
+        document.getElementById('themeToggle').innerText = theme === 'light' ? '🌙' : '☀️';
+    }
+
+    function setFontStyle(fontType) {
+        if(fontType === 'dyslexic') { document.body.classList.add('font-dyslexic'); } 
+        else { document.body.classList.remove('font-dyslexic'); }
+        localStorage.setItem('fontStyle', fontType);
+    }
+
+    function setFontSize(sizeType) {
+        if(sizeType === 'large') { document.body.classList.add('font-large'); } 
+        else { document.body.classList.remove('font-large'); }
+        localStorage.setItem('fontSize', sizeType);
+    }
+
+    // --- PROFİL BİLGİLERİNİ GÜNCELLEME FONKSİYONLARI ---
+    function profilBilgileriniYukle() {
+        const isim = localStorage.getItem('kutuphane_isim') || '';
+        const soyisim = localStorage.getItem('kutuphane_soyisim') || '';
+        const sinif = localStorage.getItem('kutuphane_sinif') || '';
+        const no = localStorage.getItem('kutuphane_no') || '';
+
+        // Form alanlarını doldur
+        document.getElementById('isim').value = isim;
+        document.getElementById('soyisim').value = soyisim;
+        if(sinif) document.getElementById('sinif').value = sinif;
+        document.getElementById('okulNo').value = no;
+
+        // Ayarlar sekmesindeki alanları doldur
+        document.getElementById('set_isim').value = isim;
+        document.getElementById('set_soyisim').value = soyisim;
+        if(sinif) document.getElementById('set_sinif').value = sinif;
+        document.getElementById('set_okulNo').value = no;
+    }
+
+    function profilGuncelle() {
+        const isim = document.getElementById('set_isim').value.trim();
+        const soyisim = document.getElementById('set_soyisim').value.trim();
+        const sinif = document.getElementById('set_sinif').value;
+        const no = document.getElementById('set_okulNo').value.trim();
+        const msg = document.getElementById('profilMesaji');
+
+        if(!isim || !soyisim || !sinif || !no) {
+            msg.style.color = "#e74c3c";
+            msg.innerText = "⚠️ Lütfen tüm alanları doldurun!";
+            return;
+        }
+
+        localStorage.setItem('kutuphane_isim', isim);
+        localStorage.setItem('kutuphane_soyisim', soyisim);
+        localStorage.setItem('kutuphane_sinif', sinif);
+        localStorage.setItem('kutuphane_no', no);
+
+        // Form alanlarını da güncelle
+        profilBilgileriniYukle();
+        akilliKarsilamaGuncelle();
+
+        msg.style.color = "#2ecc71";
+        msg.innerText = "✅ Profil bilgileriniz başarıyla güncellendi!";
+        setTimeout(() => { msg.innerText = ""; }, 3500);
+    }
+
+    // --- SEKME YÖNETİMİ ---
     function switchTab(tabId, btnElement) {
         document.querySelectorAll('.tab-content').forEach(tab => tab.classList.remove('active'));
         document.querySelectorAll('.nav-btn').forEach(btn => btn.classList.remove('active'));
@@ -260,6 +425,7 @@
         input.value = words.map(w => w.length > 0 ? w.charAt(0).toLocaleUpperCase('tr-TR') + w.slice(1).toLocaleLowerCase('tr-TR') : '').join(' ');
     }
 
+    // --- FİREBASE YAPILANDIRMASI ---
     const firebaseConfig = {
         apiKey: "AIzaSyAOncvYBGQVQ7M7SN1vHgNNCDyGQK26ph4",
         authDomain: "kitap-kurdu-bc094.firebaseapp.com",
@@ -286,9 +452,19 @@
         if(!sifre) { document.getElementById('hataMesaji').innerText = "Lütfen kaptan şifrenizi girin."; return; }
         
         auth.signInWithEmailAndPassword(ogretmenEposta, sifre)
-            .catch(() => {
-                auth.createUserWithEmailAndPassword(ogretmenEposta, sifre)
-                    .catch(err => document.getElementById('hataMesaji').innerText = "Giriş Hatası: " + err.message);
+            .catch((err) => {
+                if (err.code === 'auth/wrong-password') {
+                    document.getElementById('hataMesaji').innerText = "Giriş Hatası: Kaptan şifresi yanlış!";
+                } else {
+                    auth.createUserWithEmailAndPassword(ogretmenEposta, sifre)
+                        .catch(createErr => {
+                            if (createErr.code === 'auth/email-already-in-use') {
+                                document.getElementById('hataMesaji').innerText = "Giriş Hatası: Kaptan şifresi yanlış!";
+                            } else {
+                                document.getElementById('hataMesaji').innerText = "Giriş Hatası: " + createErr.message;
+                            }
+                        });
+                }
             });
     }
 
@@ -296,21 +472,24 @@
         const no = document.getElementById('ogrenciNo').value.trim();
         const sifre = document.getElementById('ogrenciSifre').value.trim();
         if(!no || !sifre) { document.getElementById('hataMesaji').innerText = "Numara ve şifre giriniz."; return; }
+        if(sifre.length < 6) { document.getElementById('hataMesaji').innerText = "Şifre en az 6 karakter olmalıdır."; return; }
+        
         auth.createUserWithEmailAndPassword(`ogr${no}@kutuphane.com`, sifre)
             .then(() => alert("Kayıt başarılı! Giriş yapabilirsiniz."))
-            .catch(() => document.getElementById('hataMesaji').innerText = "Bu numara kayıtlı olabilir.");
+            .catch(() => document.getElementById('hataMesaji').innerText = "Bu numara zaten kayıtlı olabilir.");
     }
 
     function ogrenciGirisYap() {
         const no = document.getElementById('ogrenciNo').value.trim();
         const sifre = document.getElementById('ogrenciSifre').value.trim();
         if(!no || !sifre) { document.getElementById('hataMesaji').innerText = "Numara ve şifre giriniz."; return; }
-        auth.signInWithEmailAndPassword(`ogr${no}@kutuphane.com`, sifre).catch(() => document.getElementById('hataMesaji').innerText = "Numara veya şifre yanlış.");
+        
+        auth.signInWithEmailAndPassword(`ogr${no}@kutuphane.com`, sifre)
+            .catch(() => document.getElementById('hataMesaji').innerText = "Giriş Hatası: Numara veya şifre yanlış.");
     }
 
     function cikisYap() { auth.signOut(); }
     
-    // YENİ: Şifre Değiştirme Fonksiyonu
     function sifreDegistir() {
         const yeniSifre = document.getElementById('yeniSifre').value.trim();
         const mesajKutusu = document.getElementById('sifreHataMesaji');
@@ -329,7 +508,6 @@
                 setTimeout(() => { mesajKutusu.innerText = ""; }, 4000);
             }).catch((error) => {
                 mesajKutusu.style.color = "#e74c3c";
-                // Firebase güvenliği gereği giriş çok eskiyse tekrar giriş yapılmasını ister
                 if (error.code === 'auth/requires-recent-login') {
                     mesajKutusu.innerText = "⚠️ Güvenlik gereği şifrenizi değiştirmek için 'Gemiden Çıkış Yap' diyerek tekrar giriş yapmalısınız.";
                 } else {
@@ -349,11 +527,12 @@
             if (isTeacher) {
                 document.getElementById('teacherPanel').style.display = 'block';
                 document.getElementById('studentFormPanel').style.display = 'none';
+                document.getElementById('profileSettingsPanel').style.display = 'none'; // Kaptana profil düzenleme gerekmez
             } else {
-                if(localStorage.getItem('kutuphane_isim')) document.getElementById('isim').value = localStorage.getItem('kutuphane_isim');
-                if(localStorage.getItem('kutuphane_soyisim')) document.getElementById('soyisim').value = localStorage.getItem('kutuphane_soyisim');
-                if(localStorage.getItem('kutuphane_sinif')) document.getElementById('sinif').value = localStorage.getItem('kutuphane_sinif');
-                if(localStorage.getItem('kutuphane_no')) document.getElementById('okulNo').value = localStorage.getItem('kutuphane_no');
+                document.getElementById('teacherPanel').style.display = 'none';
+                document.getElementById('studentFormPanel').style.display = 'block';
+                document.getElementById('profileSettingsPanel').style.display = 'block';
+                profilBilgileriniYukle();
             }
             akilliKarsilamaGuncelle(); 
             document.getElementById('agendaDate').valueAsDate = new Date();
@@ -378,25 +557,31 @@
         for (let radio of radios) { if (radio.checked) seciliYildiz = parseInt(radio.value); }
 
         const isim = document.getElementById('isim').value;
+        const soyisim = document.getElementById('soyisim').value;
+        const sinif = document.getElementById('sinif').value;
+        const okulNo = document.getElementById('okulNo').value;
+
         if(!isTeacher) {
             localStorage.setItem('kutuphane_isim', isim);
-            localStorage.setItem('kutuphane_soyisim', document.getElementById('soyisim').value);
-            localStorage.setItem('kutuphane_sinif', document.getElementById('sinif').value);
-            localStorage.setItem('kutuphane_no', document.getElementById('okulNo').value);
+            localStorage.setItem('kutuphane_soyisim', soyisim);
+            localStorage.setItem('kutuphane_sinif', sinif);
+            localStorage.setItem('kutuphane_no', okulNo);
             akilliKarsilamaGuncelle(); 
         }
 
         db.ref('kitaplar').push({
-            uid: currentUser.uid, isim: isim,
-            soyisim: document.getElementById('soyisim').value,
-            sinif: document.getElementById('sinif').value,
-            okulNo: document.getElementById('okulNo').value,
+            uid: currentUser.uid, 
+            isim: isim,
+            soyisim: soyisim,
+            sinif: sinif,
+            okulNo: okulNo,
             kitapAdi: document.getElementById('kitapAdi').value,
             sayfaSayisi: parseInt(document.getElementById('sayfaSayisi').value),
             yildiz: seciliYildiz,
             baslama: document.getElementById('baslama').value,
             bitis: document.getElementById('bitis').value,
-            notlar: notlar, onay: false,
+            notlar: notlar, 
+            onay: false,
             timestamp: firebase.database.ServerValue.TIMESTAMP
         }).then(() => {
             document.getElementById('kitapAdi').value = '';
@@ -466,10 +651,6 @@
                     <p style="background:rgba(0,0,0,0.1); padding:10px; border-radius:8px; font-style:italic; font-size:13px;">"${book.notlar}"</p>
                     <div style="margin-top:10px; font-weight:bold; font-size:12px; color: ${book.onay ? '#2ecc71' : '#f39c12'};">${book.onay ? '✅ Kaptan Onayladı' : '⏳ Kaptan İnceliyor'}</div>
                     ${isTeacher ? `
-                        <style>
-                          .onayla-label { font-size: 13px !important; font-weight: bold !important; color: var(--text) !important; display: inline-flex !important; align-items: center !important; }
-                          .onayla-label input { width: 18px !important; height: 18px !important; margin-right: 8px !important; accent-color: #2ecc71; }
-                        </style>
                         <div style="margin-top:15px; border-top:1px solid var(--card-border); padding-top:10px; display:flex; justify-content:space-between; align-items:center;">
                             <label class="onayla-label"><input type="checkbox" ${book.onay ? 'checked' : ''} onchange="db.ref('kitaplar/${book.id}').update({onay: this.checked})"> Onayla</label>
                             <button onclick="if(confirm('Silinsin mi?')) db.ref('kitaplar/${book.id}').remove()" style="background:#e74c3c; color:white; border:none; border-radius:5px; padding:6px 12px; cursor:pointer; font-weight:bold;">🗑️ Sil</button>
