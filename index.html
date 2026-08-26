@@ -9,8 +9,7 @@
     <meta name="theme-color" content="#6C63FF">
     <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;800&display=swap" rel="stylesheet">
     
-    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-auth.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script><script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-auth.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
@@ -70,9 +69,10 @@
     <h1 style="font-size: 28px; text-align:center;">🚀 Uzay Kütüphanesi</h1>
     <p style="color: var(--muted); font-size: 14px; margin-bottom: 25px; text-align:center;">Maceraya kaldığın yerden devam et!</p>
     
+    <!-- KAPTAN GİRİŞİ (Sabit sistem: Tek tıkla otomatik oluşturur ve girer) -->
     <div class="login-section" style="border-color: var(--secondary);">
         <h3 style="color: var(--secondary); font-size: 16px; margin-bottom: 10px;">👨‍🏫 Kaptan (Öğretmen) Girişi</h3>
-        <input type="password" id="kaptanSifre" placeholder="Kaptan Şifreniz">
+        <input type="password" id="kaptanSifre" placeholder="Kaptan Şifreniz (Örn: 123456)">
         <button class="submit-btn" style="background: var(--secondary);" onclick="kaptanGirisYap()">Kaptan Paneline Gir</button>
     </div>
 
@@ -268,14 +268,15 @@
     let globalBooks = [];
     let currentClassFilter = 'Tümü';
 
-    // KAPTAN GİRİŞİ (Sadece giriş yapmayı dener, hata verirse uyarı verir)
+    // KAPTAN GİRİŞİ: Önce giriş yapmayı dener, hesap yoksa otomatik oluşturur ve anında içeri alır
     function kaptanGirisYap() {
         const sifre = document.getElementById('kaptanSifre').value.trim();
         if(!sifre) { document.getElementById('hataMesaji').innerText = "Lütfen kaptan şifrenizi girin."; return; }
         
         auth.signInWithEmailAndPassword(ogretmenEposta, sifre)
-            .catch(err => {
-                document.getElementById('hataMesaji').innerText = "Giriş Hatası: Bu şifre yanlış veya hesap Google ile bağlı. Firebase konsolundan şifrenizi sıfırlayınız.";
+            .catch(() => {
+                auth.createUserWithEmailAndPassword(ogretmenEposta, sifre)
+                    .catch(err => document.getElementById('hataMesaji').innerText = "Giriş Hatası: " + err.message);
             });
     }
 
@@ -450,7 +451,7 @@
         XLSX.writeFile(wb, "Uzay_Kutuphanesi_Sinif_Listesi.xlsx");
     }
 
-    void function ajandaEkle() {
+    function ajandaEkle() {
         const t = document.getElementById('agendaDate').value, n = document.getElementById('agendaText').value;
         if(!t || !n) return;
         let a = JSON.parse(localStorage.getItem('kutuphane_ajanda') || '{}');
