@@ -44,10 +44,9 @@
         .nav-btn { background: none; border: none; color: var(--muted); font-family: inherit; font-size: 12px; font-weight: 800; display: flex; flex-direction: column; align-items: center; gap: 5px; cursor: pointer; flex: 1;}
         .nav-btn span { font-size: 22px; }
         .nav-btn.active { color: var(--primary); transform: translateY(-3px);}
-        #loginScreen { max-width: 420px; margin: 60px auto; text-align: center; background: var(--card-bg); padding: 35px 25px; border-radius: 20px; border: 1px solid var(--card-border);}
-        .google-btn { background-color: #4285F4; color: white; border: none; padding: 12px 20px; font-size: 15px; border-radius: 12px; cursor: pointer; display: flex; align-items: center; justify-content: center; width: 100%; gap: 10px; font-weight: bold; margin-bottom: 15px;}
-        .school-login-box { background: rgba(0,0,0,0.05); padding: 20px; border-radius: 15px; border: 1px solid var(--card-border); text-align: left; }
-        input, select, textarea { width: 100%; padding: 12px; border: 1px solid var(--card-border); border-radius: 12px; box-sizing: border-box; font-family: inherit; font-size: 14px; background: var(--input-bg); color: var(--input-text); outline: none; }
+        #loginScreen { max-width: 420px; margin: 60px auto; background: var(--card-bg); padding: 35px 25px; border-radius: 20px; border: 1px solid var(--card-border);}
+        .login-section { background: rgba(0,0,0,0.05); padding: 20px; border-radius: 15px; border: 1px solid var(--card-border); margin-bottom: 20px; }
+        input, select, textarea { width: 100%; padding: 12px; border: 1px solid var(--card-border); border-radius: 12px; box-sizing: border-box; font-family: inherit; font-size: 14px; background: var(--input-bg); color: var(--input-text); outline: none; margin-bottom: 12px; }
         .submit-btn { background-color: var(--primary); color: white; border: none; padding: 14px; border-radius: 12px; font-weight: 800; font-size: 15px; cursor: pointer; width: 100%; }
         .logout-btn { background-color: #e74c3c; width: 100%; margin-top: 30px; }
         .rating { display: flex; flex-direction: row-reverse; justify-content: flex-end; gap: 5px;}
@@ -72,30 +71,32 @@
 <body>
 
 <div id="loginScreen">
-    <h1 style="font-size: 28px;">🚀 Uzay Kütüphanesi</h1>
-    <p style="color: var(--muted); font-size: 14px; margin-bottom: 25px;">Maceraya kaldığın yerden devam et!</p>
+    <h1 style="font-size: 28px; text-align:center;">🚀 Uzay Kütüphanesi</h1>
+    <p style="color: var(--muted); font-size: 14px; margin-bottom: 25px; text-align:center;">Maceraya kaldığın yerden devam et!</p>
     
-    <button class="google-btn" onclick="googleIleGiris()">
-        <img src="https://upload.wikimedia.org/wikipedia/commons/5/53/Google_%22G%22_Logo.svg" alt="Google" style="width:20px; height:20px; background:white; padding:5px; border-radius:50%;">
-        Google Hesabı ile Giriş
-    </button>
-    
-    <div class="school-login-box">
-        <label style="font-size: 12px; color: var(--muted); font-weight:bold;">Okul Numarası:</label>
-        <input type="number" id="ogrenciNo" placeholder="Örn: 145" style="margin-bottom: 12px;">
-        
-        <label style="font-size: 12px; color: var(--muted); font-weight:bold;">Şifre:</label>
+    <!-- KAPTAN (ÖĞRETMEN) GİRİŞ KUTUSU -->
+    <div class="login-section" style="border-color: var(--secondary);">
+        <h3 style="color: var(--secondary); font-size: 16px; margin-bottom: 10px;">👨‍🏫 Kaptan (Öğretmen) Girişi</h3>
+        <input type="password" id="kaptanSifre" placeholder="Kaptan Şifreniz">
+        <button class="submit-btn" style="background: var(--secondary);" onclick="kaptanGirisYap()">Kaptan Paneline Gir</button>
+    </div>
+
+    <!-- ÖĞRENCİ GİRİŞ KUTUSU -->
+    <div class="login-section">
+        <h3 style="color: var(--primary); font-size: 16px; margin-bottom: 10px;">🧑‍🚀 Öğrenci Girişi</h3>
+        <input type="number" id="ogrenciNo" placeholder="Okul Numarası (Örn: 145)">
         <input type="password" id="ogrenciSifre" placeholder="Şifren (En az 6 karakter)">
-        <div style="font-size: 11px; color: var(--secondary); margin-top: -6px; margin-bottom: 12px; font-weight: bold;">
+        <div style="font-size: 11px; color: var(--muted); margin-top: -6px; margin-bottom: 12px; font-weight: bold;">
             💡 İpucu: Okul numaran ve adını birleştirebilirsin (Örn: 145ali)
         </div>
         
-        <div style="display: flex; gap: 10px; margin-top: 5px;">
+        <div style="display: flex; gap: 10px;">
             <button class="submit-btn" style="background: #e67e22;" onclick="ogrenciKayitOl()">Kayıt Ol</button>
             <button class="submit-btn" onclick="ogrenciGirisYap()">Giriş Yap</button>
         </div>
     </div>
-    <p id="hataMesaji" style="color: #e74c3c; margin-top: 15px; font-size: 13px; font-weight:bold;"></p>
+    
+    <p id="hataMesaji" style="color: #e74c3c; text-align: center; margin-top: 15px; font-size: 13px; font-weight:bold;"></p>
 </div>
 
 <div id="appLayout" style="display: none;">
@@ -273,10 +274,23 @@
     let globalBooks = [];
     let currentClassFilter = 'Tümü';
 
+    // KAPTAN (ÖĞRETMEN) GİRİŞİ / OTOMATİK KAYIT
+    function kaptanGirisYap() {
+        const sifre = document.getElementById('kaptanSifre').value.trim();
+        if(!sifre) { document.getElementById('hataMesaji').innerText = "Lütfen kaptan şifrenizi girin."; return; }
+        
+        // Önce giriş yapmayı dene, yoksa otomatik oluştur
+        auth.signInWithEmailAndPassword(ogretmenEposta, sifre)
+            .catch(() => {
+                auth.createUserWithEmailAndPassword(ogretmenEposta, sifre)
+                    .catch(err => document.getElementById('hataMesaji').innerText = "Giriş Hatası: " + err.message);
+            });
+    }
+
     function ogrenciKayitOl() {
         const no = document.getElementById('ogrenciNo').value.trim();
         const sifre = document.getElementById('ogrenciSifre').value.trim();
-        if(!no || !sifre) return;
+        if(!no || !sifre) { document.getElementById('hataMesaji').innerText = "Numara ve şifre giriniz."; return; }
         auth.createUserWithEmailAndPassword(`ogr${no}@kutuphane.com`, sifre)
             .then(() => alert("Kayıt başarılı! Giriş yapabilirsiniz."))
             .catch(() => document.getElementById('hataMesaji').innerText = "Bu numara kayıtlı olabilir.");
@@ -285,21 +299,9 @@
     function ogrenciGirisYap() {
         const no = document.getElementById('ogrenciNo').value.trim();
         const sifre = document.getElementById('ogrenciSifre').value.trim();
-        if(!no || !sifre) return;
+        if(!no || !sifre) { document.getElementById('hataMesaji').innerText = "Numara ve şifre giriniz."; return; }
         auth.signInWithEmailAndPassword(`ogr${no}@kutuphane.com`, sifre).catch(() => document.getElementById('hataMesaji').innerText = "Numara veya şifre yanlış.");
     }
-
-    // GÜVENLİ GOOGLE GİRİŞİ (GitHub Pages uyumlu Redirect metodu)
-    function googleIleGiris() {
-        const provider = new firebase.auth.GoogleAuthProvider();
-        auth.signInWithRedirect(provider).catch(error => {
-            document.getElementById('hataMesaji').innerText = "Giriş Hatası: " + error.message;
-        });
-    }
-
-    auth.getRedirectResult().catch(error => {
-        if(error) document.getElementById('hataMesaji').innerText = "Onay Hatası: " + error.message;
-    });
 
     function cikisYap() { auth.signOut(); }
 
@@ -396,7 +398,7 @@
             Object.entries(studentStats).sort((a,b) => b[1] - a[1]).slice(0, 10).forEach((l, i) => {
                 const rutbe = getRutbe(l[1]);
                 if(i === 0) {
-                    leaderboard.innerHTML += `<li class="leader-1"><div>👑 <b>${l.join(': ')} syf</b> <span style="font-size:11px;">(${rutbe})</span></div><span>Lider</span></li>`;
+                    leaderboard.innerHTML += `<li class="leader-1"><div>👑 <b>${l[0]}</b> (${l[1]} syf) <span style="font-size:11px;">(${rutbe})</span></div><span>Lider</span></li>`;
                 } else {
                     leaderboard.innerHTML += `<li><div>${i+1}. ${l[0]} <span style="font-size:10px; color:var(--muted);">${rutbe}</span></div><span>${l[1]} syf</span></li>`;
                 }
