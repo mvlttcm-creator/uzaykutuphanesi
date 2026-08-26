@@ -130,7 +130,7 @@
         
         <label style="font-size: 12px; color: var(--muted); font-weight:bold;">Şifre:</label>
         <input type="password" id="ogrenciSifre" placeholder="Şifren (En az 6 karakter)">
-        <!-- Şifre İpucu / Hatırlatıcı Eklendi -->
+        <!-- Şifre İpucu / Hatırlatıcı -->
         <div style="font-size: 11px; color: var(--secondary); margin-top: -6px; margin-bottom: 12px; font-weight: bold;">
             💡 İpucu: Okul numaran ve adını birleştirebilirsin (Örn: 145ali)
         </div>
@@ -316,13 +316,13 @@
         } else if (!isim) {
             isim = "Gezgin";
         } else {
-            isim = isim.split(' ')[0]; // İlk ad
+            isim = isim.split(' ')[0];
         }
         
         document.getElementById('greetingText').innerText = `${msg}, ${isim}! ✨`;
     }
 
-    // --- UZAY RÜTBELERİ (Oyunlaştırma) ---
+    // --- UZAY RÜTBELERİ ---
     function getRutbe(sayfa) {
         if(sayfa >= 1500) return "🌌 Galaksi Fatihi";
         if(sayfa >= 801) return "☄️ Meteor Avcısı";
@@ -383,16 +383,19 @@
         auth.signInWithEmailAndPassword(`ogr${no}@kutuphane.com`, sifre).catch(() => document.getElementById('hataMesaji').innerText = "Numara veya şifre yanlış.");
     }
 
+    // GOOGLE İLE GİRİŞ (Popup engellerine takılmayan kesin çözüm: Redirect yöntemi)
     function googleIleGiris() {
         const provider = new firebase.auth.GoogleAuthProvider();
-        if (window.innerWidth > 800) {
-            auth.signInWithPopup(provider).catch(error => { document.getElementById('hataMesaji').innerText = "Giriş Hatası: " + error.message; });
-        } else {
-            auth.signInWithRedirect(provider);
-        }
+        auth.signInWithRedirect(provider).catch(error => { 
+            document.getElementById('hataMesaji').innerText = "Google Giriş Hatası: " + error.message; 
+        });
     }
 
-    auth.getRedirectResult().catch(function(error) { if(error) document.getElementById('hataMesaji').innerText = "Google Onay Hatası: " + error.message; });
+    // Yönlendirme dönüş sonucunu yakala
+    auth.getRedirectResult().catch(function(error) { 
+        if(error) document.getElementById('hataMesaji').innerText = "Google Onay Hatası: " + error.message; 
+    });
+
     function cikisYap() { auth.signOut(); }
 
     auth.onAuthStateChanged(user => {
