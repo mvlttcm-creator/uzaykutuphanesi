@@ -383,7 +383,7 @@
         auth.signInWithEmailAndPassword(`ogr${no}@kutuphane.com`, sifre).catch(() => document.getElementById('hataMesaji').innerText = "Numara veya şifre yanlış.");
     }
 
-    // GOOGLE İLE GİRİŞ (Popup engellerine takılmayan kesin çözüm: Redirect yöntemi)
+    // KESİN ÇÖZÜM: Popup yerine doğrudan yönlendirme (Redirect) kullanılıyor
     function googleIleGiris() {
         const provider = new firebase.auth.GoogleAuthProvider();
         auth.signInWithRedirect(provider).catch(error => { 
