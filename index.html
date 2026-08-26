@@ -33,7 +33,17 @@
         body.font-dyslexic { --main-font: 'Comic Sans MS', 'Chalkboard SE', sans-serif; }
         body.font-large { font-size: 110%; }
 
-        body { font-family: var(--main-font); background-color: var(--bg); color: var(--text); margin: 0; padding: 0; padding-bottom: 80px; transition: 0.3s; }
+        body { 
+            font-family: var(--main-font); 
+            background-color: var(--bg); 
+            color: var(--text); 
+            margin: 0; padding: 0; padding-bottom: 80px; 
+            transition: 0.3s; 
+            /* SİLİK ASTRONOT VE KİTAP ARKA PLANI */
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='220' height='220' viewBox='0 0 220 220'%3E%3Ctext x='20' y='60' font-size='40' transform='rotate(-15 20 60)' opacity='0.05'%3E🧑‍🚀📖%3C/text%3E%3Ctext x='130' y='160' font-size='35' transform='rotate(15 130 160)' opacity='0.03'%3E🚀📚%3C/text%3E%3C/svg%3E");
+            background-attachment: fixed;
+        }
+
         h1, h2, h3 { color: var(--secondary); text-align: center; margin-top: 0;}
         .app-header { background: var(--card-bg); padding: 15px 20px; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--card-border); position: sticky; top: 0; z-index: 100;}
         .greeting-text { font-size: 18px; font-weight: 800; color: var(--primary); margin: 0;}
@@ -73,21 +83,33 @@
         
         .meb-calendar-item { background: var(--input-bg); padding: 10px 12px; border-radius: 10px; margin-bottom: 8px; display: flex; justify-content: space-between; align-items: center; border-left: 4px solid #2ecc71; font-size: 13px; font-weight: 600;}
         
-        /* Rozetler (Badges) */
         .badge-box { background: var(--input-bg); border: 1px solid var(--card-border); padding: 8px 12px; border-radius: 15px; display: inline-flex; align-items: center; gap: 6px; font-size: 12px; font-weight: 800; margin: 5px 5px 5px 0;}
         .badge-box.locked { opacity: 0.4; filter: grayscale(100%); }
         
-        /* Kitaplık Dolabı */
         .bookcase-wrapper { margin-top: 25px; margin-bottom: 30px; filter: drop-shadow(0 15px 25px rgba(0,0,0,0.2)); }
         .bookcase-top { background: linear-gradient(to bottom, var(--wood-medium), var(--wood-dark)); height: 35px; border-radius: 15px 15px 0 0; border: 3px solid var(--wood-dark); border-bottom: none; box-shadow: inset 0 5px 10px rgba(255,255,255,0.15); position: relative; }
         .bookcase-top::after { content: "📚 Uzay Arşivi"; position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); color: #fff; font-size: 14px; font-weight: 800; letter-spacing: 1px; text-shadow: 0 2px 4px rgba(0,0,0,0.6); background: rgba(0,0,0,0.2); padding: 3px 15px; border-radius: 10px; }
         .bookcase { background-color: var(--cabinet-bg); border: 15px solid var(--wood-dark); border-top: none; border-radius: 0 0 15px 15px; padding: 20px; display: grid; grid-template-columns: 1fr; gap: 25px; box-shadow: inset 0 15px 25px rgba(0,0,0,0.4); }
         @media(min-width: 600px) { .bookcase { grid-template-columns: 1fr 1fr; } }
         
-        .book-card { background: var(--card-bg); padding: 20px; border-radius: 12px 12px 4px 4px; border: 1px solid var(--card-border); border-bottom: 14px solid var(--wood-light); border-left: 6px solid var(--secondary); position: relative; box-shadow: 0 8px 15px rgba(0,0,0,0.25); transition: transform 0.3s, box-shadow 0.3s; }
+        /* Uzun yazılarda taşmayı engelleyen özellikler eklidir */
+        .book-card { 
+            background: var(--card-bg); 
+            padding: 20px; 
+            border-radius: 12px 12px 4px 4px; 
+            border: 1px solid var(--card-border); 
+            border-bottom: 14px solid var(--wood-light); 
+            border-left: 6px solid var(--secondary); 
+            position: relative; 
+            box-shadow: 0 8px 15px rgba(0,0,0,0.25); 
+            transition: transform 0.3s, box-shadow 0.3s;
+            min-width: 0; 
+            word-wrap: break-word; 
+            overflow-wrap: break-word; 
+        }
         .book-card:hover { transform: translateY(-5px); box-shadow: 0 15px 25px rgba(0,0,0,0.4); }
         .book-card.approved { border-left-color: #2ecc71; border-bottom-color: var(--wood-medium); }
-        .rank-badge { position: absolute; top: 15px; right: 15px; font-size: 11px; background: rgba(255, 255, 255, 0.1); padding: 4px 8px; border-radius: 8px; color: var(--muted); font-weight: bold;}
+        .rank-badge { position: absolute; top: 15px; right: 15px; font-size: 11px; background: rgba(255, 255, 255, 0.1); padding: 4px 8px; border-radius: 8px; color: var(--muted); font-weight: bold; white-space: nowrap;}
         
         .leaderboard-list { list-style: none; padding: 0; margin: 0; }
         .leaderboard-list li { background: var(--input-bg); margin-bottom: 10px; padding: 12px; border-radius: 10px; font-size: 14px; font-weight: 600; display: flex; justify-content: space-between; align-items: center; border-left: 4px solid var(--primary); }
@@ -95,6 +117,8 @@
         
         .filter-btn { background: var(--input-bg); color: var(--text); border: 1px solid var(--card-border); padding: 8px 12px; border-radius: 8px; cursor: pointer; font-size: 12px; font-weight: bold;}
         .filter-btn.active { background: var(--primary); border-color: var(--primary); color: white;}
+        .onayla-label { font-size: 13px !important; font-weight: bold !important; color: var(--text) !important; display: inline-flex !important; align-items: center !important; cursor: pointer;}
+        .onayla-label input { width: 18px !important; height: 18px !important; margin-right: 8px !important; accent-color: #2ecc71; cursor: pointer;}
     </style>
 </head>
 <body>
@@ -134,11 +158,9 @@
 
     <div class="container">
         
-        <!-- SEKME 1: ANA SAYFA -->
         <div id="tab-home" class="tab-content active">
             
             <div id="studentHomePanel" style="display:none;">
-                <!-- 3. MADDE: KİŞİSEL HEDEF ÇUBUĞU -->
                 <div class="panel" style="border-color: #2ecc71;">
                     <h3 style="color:#2ecc71;">🎯 Benim Rotam</h3>
                     <div class="progress-box">
@@ -150,23 +172,20 @@
                     </div>
                 </div>
 
-                <!-- 2. MADDE: ROZETLERİM -->
                 <div class="panel">
                     <h3>🏅 Uzay Rozetlerim</h3>
-                    <div id="rozetContainer">
-                        <!-- Rozetler JS ile hesaplanıp buraya eklenecek -->
-                    </div>
+                    <div id="rozetContainer"></div>
                 </div>
             </div>
 
             <div class="panel">
                 <h3>📊 Sınıf İstatistikleri</h3>
                 <div class="progress-box">
-                    <div class="progress-title"><span>1. Dönem Yolculuğu</span><span id="donem1Sayfa">0 syf</span></div>
+                    <div class="progress-title"><span>1. Dönem Yolculuğu</span><span id="donem1Sayfa">0 / 1000 syf</span></div>
                     <div class="progress-bar-bg"><div class="progress-bar-fill" id="barDonem1"></div></div>
                 </div>
                 <div class="progress-box">
-                    <div class="progress-title"><span>2. Dönem Yolculuğu</span><span id="donem2Sayfa">0 syf</span></div>
+                    <div class="progress-title"><span>2. Dönem Yolculuğu</span><span id="donem2Sayfa">0 / 1250 syf</span></div>
                     <div class="progress-bar-bg"><div class="progress-bar-fill" id="barDonem2"></div></div>
                 </div>
             </div>
@@ -181,7 +200,6 @@
             </div>
         </div>
 
-        <!-- SEKME 2: KÜTÜPHANE -->
         <div id="tab-books" class="tab-content">
             <div class="panel" id="studentFormPanel" style="border: 2px solid var(--primary);">
                 <h3>🚀 Yeni Keşif Ekle</h3>
@@ -235,16 +253,13 @@
                 </div>
             </div>
 
-            <!-- KİTAPLIK DOLABI TASARIMI -->
             <div class="bookcase-wrapper">
                 <div class="bookcase-top"></div>
                 <div id="cardsContainer" class="bookcase">
-                    <!-- Kartlar JS ile buraya raf raf dizilecek -->
                 </div>
             </div>
         </div>
 
-        <!-- SEKME 3: LİDERLİK VE AJANDA -->
         <div id="tab-leaderboard" class="tab-content">
             <div class="panel">
                 <h3>🏆 Galaksi Liderleri</h3>
@@ -259,19 +274,15 @@
             </div>
         </div>
 
-        <!-- SEKME 4: AYARLAR -->
         <div id="tab-settings" class="tab-content">
             
             <div class="panel" id="profileSettingsPanel">
                 <h3>🧑‍🚀 Profil & Hedef Bilgilerim</h3>
                 <div style="background: rgba(0,0,0,0.05); padding: 15px; border-radius: 15px; border: 1px solid var(--card-border);">
-                    
-                    <!-- KİŞİSEL HEDEF GİRİŞİ -->
                     <div style="margin-bottom: 15px; border-bottom: 1px solid var(--card-border); padding-bottom: 15px;">
                         <small style="color:var(--primary); font-weight:bold;">🎯 Kendime Koyduğum Sayfa Hedefim:</small>
                         <input type="number" id="set_hedef" placeholder="Örn: 500" style="margin-top:5px; border-color:var(--primary);">
                     </div>
-
                     <div style="display: grid; grid-template-columns: 1fr 1fr; gap:10px;">
                         <div>
                             <small style="color:var(--muted); font-weight:bold;">Ad:</small>
@@ -339,7 +350,6 @@
 
     </div>
 
-    <!-- ALT NAVİGASYON BARI -->
     <div class="bottom-nav">
         <button class="nav-btn active" onclick="switchTab('tab-home', this)"><span>🏠</span>Ana Ekran</button>
         <button class="nav-btn" onclick="switchTab('tab-books', this)"><span>📚</span>Kütüphane</button>
@@ -349,7 +359,6 @@
 </div>
 
 <script>
-    // --- SES MOTORU (Dış dosyasız sihirli ses!) ---
     function playMagicSound() {
         try {
             const ctx = new (window.AudioContext || window.webkitAudioContext)();
@@ -364,15 +373,13 @@
                 gain.gain.exponentialRampToValueAtTime(0.00001, time + 0.5);
                 osc.stop(time + 0.5);
             };
-            // Do majör sihirli arpej
-            playTone(523.25, ctx.currentTime);      // Do
-            playTone(659.25, ctx.currentTime + 0.1); // Mi
-            playTone(783.99, ctx.currentTime + 0.2); // Sol
-            playTone(1046.50, ctx.currentTime + 0.3); // İnce Do
-        } catch(e) {} // Tarayıcı desteklemiyorsa sessizce geç
+            playTone(523.25, ctx.currentTime);      
+            playTone(659.25, ctx.currentTime + 0.1); 
+            playTone(783.99, ctx.currentTime + 0.2); 
+            playTone(1046.50, ctx.currentTime + 0.3); 
+        } catch(e) {} 
     }
 
-    // --- TEMA VE AYARLAR ---
     const savedTheme = localStorage.getItem('theme') || 'dark';
     const savedFont = localStorage.getItem('fontStyle') || 'nunito';
     const savedSize = localStorage.getItem('fontSize') || 'normal';
@@ -455,7 +462,7 @@
 
         profilBilgileriniYukle();
         akilliKarsilamaGuncelle();
-        verileriGetir(); // Hedef barını güncelle
+        verileriGetir(); 
 
         msg.style.color = "#2ecc71";
         msg.innerText = "✅ Bilgileriniz başarıyla güncellendi!";
@@ -492,7 +499,6 @@
         input.value = words.map(w => w.length > 0 ? w.charAt(0).toLocaleUpperCase('tr-TR') + w.slice(1).toLocaleLowerCase('tr-TR') : '').join(' ');
     }
 
-    // --- FİREBASE ---
     const firebaseConfig = {
         apiKey: "AIzaSyAOncvYBGQVQ7M7SN1vHgNNCDyGQK26ph4",
         authDomain: "kitap-kurdu-bc094.firebaseapp.com",
@@ -633,7 +639,6 @@
             akilliKarsilamaGuncelle(); 
         }
         
-        // 4. MADDE: SİHİRLİ SES EFEKTİ VE PATLAMA
         playMagicSound();
         confetti({ particleCount: 150, spread: 80, origin: { y: 0.6 } });
 
@@ -653,7 +658,6 @@
         });
     });
 
-    // 1. MADDE: KAPTANIN SEYİR DEFTERİ KAYIT FONKSİYONU
     window.kaptanNotKaydet = function(id) {
         const notIcerik = document.getElementById('not_' + id).value.trim();
         db.ref('kitaplar/' + id).update({ kaptanNotu: notIcerik })
@@ -666,7 +670,6 @@
             globalBooks = data ? Object.keys(data).map(key => ({ id: key, ...data[key] })) : [];
             let studentStats = {}, toplamDonem1 = 0, toplamDonem2 = 0;
             
-            // Kişisel istatistikler (Öğrenci İçin)
             let kisiselOnayliSayfa = 0;
             let kisiselOnayliKitapSayisi = 0;
             let elestirmenMi = false;
@@ -675,7 +678,10 @@
                 if(b.onay) {
                     studentStats[`${b.isim} ${b.soyisim} (${b.sinif})`] = (studentStats[`${b.isim} ${b.soyisim} (${b.sinif})`] || 0) + b.sayfaSayisi;
                     const ay = new Date(b.bitis).getMonth() + 1;
+                    
+                    // 1. Dönem: Eylül(9) ile Ocak(1) arası
                     if(ay >= 9 || ay <= 1) toplamDonem1 += b.sayfaSayisi;
+                    // 2. Dönem: Şubat(2) ile Haziran(6) arası
                     else if(ay >= 2 && ay <= 6) toplamDonem2 += b.sayfaSayisi;
 
                     if(!isTeacher && b.uid === currentUser.uid) {
@@ -686,14 +692,12 @@
                 }
             });
 
-            // 3. MADDE: KİŞİSEL HEDEF BARI GÜNCELLEMESİ
             if(!isTeacher) {
                 const hedef = parseInt(localStorage.getItem('kutuphane_hedef') || '500');
                 const hedefYuzde = Math.min(100, Math.round((kisiselOnayliSayfa / hedef) * 100));
                 document.getElementById('hedefText').innerText = `${kisiselOnayliSayfa} / ${hedef} syf`;
                 document.getElementById('barHedef').style.width = hedefYuzde + "%";
                 
-                // 2. MADDE: ROZET SİSTEMİ
                 const rozetDiv = document.getElementById('rozetContainer');
                 rozetDiv.innerHTML = `
                     <div class="badge-box ${kisiselOnayliKitapSayisi >= 1 ? '' : 'locked'}">🚀 İlk Adım</div>
@@ -703,10 +707,11 @@
                 `;
             }
 
-            document.getElementById('donem1Sayfa').innerText = toplamDonem1 + " syf";
-            document.getElementById('barDonem1').style.width = Math.min(100, Math.round((toplamDonem1 / 2000) * 100)) + "%";
-            document.getElementById('donem2Sayfa').innerText = toplamDonem2 + " syf";
-            document.getElementById('barDonem2').style.width = Math.min(100, Math.round((toplamDonem2 / 2000) * 100)) + "%";
+            // DÖNEM HEDEFLERİ (1. Dönem 1000, 2. Dönem 1250 Sayfa)
+            document.getElementById('donem1Sayfa').innerText = toplamDonem1 + " / 1000 syf";
+            document.getElementById('barDonem1').style.width = Math.min(100, Math.round((toplamDonem1 / 1000) * 100)) + "%";
+            document.getElementById('donem2Sayfa').innerText = toplamDonem2 + " / 1250 syf";
+            document.getElementById('barDonem2').style.width = Math.min(100, Math.round((toplamDonem2 / 1250) * 100)) + "%";
 
             const leaderboard = document.getElementById('leaderboard');
             leaderboard.innerHTML = '';
@@ -737,11 +742,10 @@
 
         list.reverse().forEach(book => {
             const stars = "⭐".repeat(book.yildiz || 5);
-            // 1. MADDE: KAPTAN NOTU BÖLÜMÜ (ÖĞRENCİ İÇİN)
             const kaptanNotuHTML = book.kaptanNotu ? `
                 <div style="background: rgba(108, 99, 255, 0.15); border-left: 4px solid var(--primary); padding: 10px; margin-top: 15px; border-radius: 8px;">
                     <span style="font-size:12px; font-weight:800; color:var(--primary);">👨‍🏫 Kaptanın Seyir Defteri:</span>
-                    <p style="margin:5px 0 0 0; font-size:13px; font-style:italic; font-weight:600;">"${book.kaptanNotu}"</p>
+                    <p style="margin:5px 0 0 0; font-size:13px; font-style:italic; font-weight:600; word-wrap: break-word;">"${book.kaptanNotu}"</p>
                 </div>` : '';
 
             container.innerHTML += `
@@ -751,13 +755,14 @@
                     <h4 style="margin:10px 0 2px 0; color:var(--secondary);">${book.kitapAdi}</h4>
                     <div style="font-size:12px; margin-bottom:8px;">${stars}</div>
                     <p style="margin:5px 0; font-size:13px;">👨‍🚀 ${book.isim} ${book.soyisim} | 📑 ${book.sayfaSayisi} syf</p>
-                    <p style="background:rgba(0,0,0,0.1); padding:10px; border-radius:8px; font-style:italic; font-size:13px;">"${book.notlar}"</p>
+                    
+                    <p style="background:rgba(0,0,0,0.1); padding:10px; border-radius:8px; font-style:italic; font-size:13px; word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;">"${book.notlar}"</p>
+                    
                     <div style="margin-top:10px; font-weight:bold; font-size:12px; color: ${book.onay ? '#2ecc71' : '#f39c12'};">${book.onay ? '✅ Kaptan Onayladı' : '⏳ Kaptan İnceliyor'}</div>
                     
                     ${!isTeacher ? kaptanNotuHTML : ''}
 
                     ${isTeacher ? `
-                        <!-- 1. MADDE: KAPTAN NOTU GİRİŞİ (ÖĞRETMEN İÇİN) -->
                         <div style="margin-top:15px; background:rgba(0,0,0,0.05); padding:10px; border-radius:10px; border:1px solid var(--card-border);">
                             <textarea id="not_${book.id}" rows="2" style="margin-bottom:8px;" placeholder="Bu keşif için Kaptan Notu yazın...">${book.kaptanNotu || ''}</textarea>
                             <button onclick="kaptanNotKaydet('${book.id}')" class="submit-btn" style="padding:8px; font-size:12px;">💬 Kaptan Notunu Kaydet</button>
